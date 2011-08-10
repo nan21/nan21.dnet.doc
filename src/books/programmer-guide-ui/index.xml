@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<book>
+	<bookinfo>		 
+		<title>Programmer guide - user interface</title>
+		<productname>DNet eBusiness Suite</productname>		 
+		<authorgroup>
+			<author>
+				<firstname>Attila</firstname>
+				<surname>Mathe</surname>				
+			</author>
+		</authorgroup>	
+		<legalnotice>
+			<para>
+				Copyright &copy; 2010, 2011 Nan21 Electronics SRL
+			</para>
+		</legalnotice>	
+	</bookinfo>
+	<xi:include href="ch-ui-introduction.xml" xmlns:xi="http://www.w3.org/2001/XInclude"  />
+	<xi:include href="ch-ui-architecture.xml" xmlns:xi="http://www.w3.org/2001/XInclude"  />
+	<xi:include href="ch-ui-data-sources.xml" xmlns:xi="http://www.w3.org/2001/XInclude"  /> 
+	<xi:include href="ch-ui-data-control-views.xml" xmlns:xi="http://www.w3.org/2001/XInclude"  />
+	<xi:include href="ch-ui-assignments.xml" xmlns:xi="http://www.w3.org/2001/XInclude"  />
+	<xi:include href="ch-ui-frames.xml" xmlns:xi="http://www.w3.org/2001/XInclude"  />
+	<xi:include href="ch-ui-examples.xml" xmlns:xi="http://www.w3.org/2001/XInclude"/>	
+</book>

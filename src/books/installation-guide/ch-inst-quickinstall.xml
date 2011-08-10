@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="inst-quickinstall">
+	<title>Quick installation</title>
+	<section>
+		<title>Prerequisites</title>
+		<para>
+			DNet eBusiness Suite requires Java 6 or later to be installed. It is
+			available from
+			<link linkend="http://www.java.com">http://www.java.com</link>
+		</para>
+	</section>
+	<section>
+		<title>Installing from the zip download</title>
+		<para>
+			Extract the contents of the archive somewhere on your computer, lets
+			say
+			<literal>C:/dnet</literal>
+			Inside you should find a
+			<literal>virgo-tomcat-server-3.0.0.RC1</literal>
+			folder which contains a Virgo web-server already configured to run
+			DNet. So go to
+			<literal>virgo-tomcat-server-3.0.0.RC1/bin</literal>
+			folder and double-click the
+			<literal>startup.bat</literal>
+			.
+		</para>
+		<para>It opens a console window showing the steps performed during
+			startup. Wait to finish then go to your browser and type in the
+			adress bar:</para>
+		<para>
+			<link linkend="http://localhost:8081/nan21.dnet.core.welcome">http://localhost:8081/nan21.dnet.core.welcome
+			</link>
+		</para>
+		
+		<para>Click the logo which redirects you to the application setup section. Sign-in with user 'admin' and password 'admin'.</para>
+		
+		<para>Follow on-screen instructions.</para>
+		
+	</section>
+</chapter>

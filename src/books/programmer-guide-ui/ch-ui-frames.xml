@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="ui-frames">
+	<title>Application frames</title>
+	<para>So far we have seen the basic building blocks used in the user
+		interface. Now it is the time to put toghter these pieces and create a
+		composite user-interface to interact with our data.</para>
+	<para>An application frame is the top level component which packs
+		together one or more data-controls, arranges the predefined dc-views
+		into a specific layout and glues together the pieces into a
+		stand-alone unit. All the tabs opened from the menu in the main
+		application are such frames.</para>
+	<para>Let's have a look at such a frame definition and go through the
+		elements. As an example let's use
+		<literal>net.nan21.dnet.module.bd.geo.frame.CountryMD_UI</literal>, the master-detail
+		country definition frame.</para>
+	<programlisting>
+	Dnet.import(["nan21.dnet.module.bd.ui.extjs/ds/CountryDs", "nan21.dnet.module.bd.ui.extjs/dc/Country", 
+	  "nan21.dnet.module.bd.ui.extjs/ds/RegionDs", "nan21.dnet.module.bd.ui.extjs/dc/Region"]);
+	
+	Ext.ns("net.nan21.dnet.module.bd.geo.frame");
+	net.nan21.dnet.module.bd.geo.frame.CountryMD_UI = Ext.extend( dnet.base.AbstractUi, {  
+	
+		_defineDcs_: function() {	
+			this._getBuilder_()
+			.addDc("country", new net.nan21.dnet.module.bd.geo.dc.Country())
+			.addDc("region", new net.nan21.dnet.module.bd.geo.dc.Region({multiEdit:true}))		
+			.linkDc("region", "country",{fields:[ {childField:"countryId", parentField:"id"} ]} );		
+		}	 
+	
+		,_defineElements_: function() {					
+			this._getBuilder_()	
+			.addDcView("country",{ name:"countryFilter", xtype:"net.nan21.dnet.module.bd.geo.dc.Country$Filter"})	 
+			.addDcView("country",{ name:"countryList", xtype:"net.nan21.dnet.module.bd.geo.dc.Country$List"})	 
+			.addDcView("country",{ name:"countryEdit", xtype:"net.nan21.dnet.module.bd.geo.dc.Country$Edit",height:120})	 
+			.addDcView("region",{ name:"regionEditList", xtype:"net.nan21.dnet.module.bd.geo.dc.Region$EditListContext", frame:true})	 
+			.addPanel({name: "main",layout:"card", activeItem:0})  	 
+			.addPanel({name: "canvas1", layout:"border", defaults:{split:true},title:"List",header:false})  	 
+			.addPanel({name: "canvas2", layout:"border", defaults:{split:true},title:"Editor",header:false})  	 
+		}
+	
+		,_linkElements_: function() {
+			this._getBuilder_()		
+		 	.addChildrenTo("main", ["canvas1","canvas2"]) 				 		
+			.addChildrenTo("canvas1",["countryFilter","countryList"] ,["north","center"])	
+			.addChildrenTo("canvas2",["countryEdit","regionEditList"] ,["north","center"])	
+		 	.addToolbarTo("canvas1","tlbCountryList")	  	
+		 	.addToolbarTo("canvas2","tlbCountryEdit")	  	
+		 	.addToolbarTo("regionEditList","tlbRegionList")	  	
+		}
+	
+		,_defineToolbars_: function() {
+			this._getBuilder_()
+			.beginToolbar("tlbCountryList", {dc:"country"}).addQuery().addEdit().addNew().addCopy().addDeleteSelected().end()
+			.beginToolbar("tlbCountryEdit", {dc:"country"}).addSave().addNew().addCopy().addCancel().addPrevRec().addNextRec().end()
+			.beginToolbar("tlbRegionList", {dc:"region"}).addQuery().addSave().addNew().addCopy().addDeleteSelected().addCancel().end(); 	
+		}
+	});
+	Ext.reg("net.nan21.dnet.module.bd.geo.frame.CountryMD_UI", net.nan21.dnet.module.bd.geo.frame.CountryMD_UI);  
+	</programlisting>
+	<para>Let's have a look at the pieces: First it imports the components
+		which it needs. The import is specified as bundle/component as in one
+		frame we can use components from different bundles. We are going to
+		use here two data controls so we declare them at the top. Then we
+		define our application frame which as most of the components extends
+		an abstract parent class. When this component is instantiated, the
+		parent initComponent method calls the builder methods defined here as
+		you already know from the data-controls. The first method invoked is
+		<literal>_defineDcs_</literal> where we have to create the data-control controller
+		instances and specify the relations. In this case we link the "region"
+		data-control as child to the parent "country" data-control setting the
+		data-source fields for the relation.</para>
+	<programlisting>_defineDcs_: function () {	
+		this._getBuilder_()
+		.addDc("country", new net.nan21.dnet.module.bd.geo.dc.Country())
+		.addDc("region", new net.nan21.dnet.module.bd.geo.dc.Region({multiEdit:true}))
+		.linkDc("region", "country",{fields:[ {childField:"countryId", parentField:"id"} ]} );		
+	}</programlisting>
+	<para>Based on the same pattern as for the data-controls first we
+		acquire the builder then add our components. After this we select
+		which predefined views from the ones defined for these data-controls
+		we want to use in this frame and specify the containers where we want
+		to place our views:</para>
+	<programlisting>_defineElements_: function () {
+		this._getBuilder_()		
+		.addDcView("country",{ name:"countryFilter", xtype:"net.nan21.dnet.module.bd.geo.dc.Country$Filter"})
+		.addDcView("country",{ name:"countryList", xtype:"net.nan21.dnet.module.bd.geo.dc.Country$List"})
+		.addDcView("country",{ name:"countryEdit", xtype:"net.nan21.dnet.module.bd.geo.dc.Country$Edit",height:120})
+		.addDcView("region",{ name:"regionEditList", xtype:"net.nan21.dnet.module.bd.geo.dc.Region$EditListContext", frame:true})
+		.addPanel({name: "main",layout:"card", activeItem:0})  	 
+		.addPanel({name: "canvas1", layout:"border", defaults:{split:true},header:false})  	 
+		.addPanel({name: "canvas2", layout:"border", defaults:{split:true},header:false});			 	
+	}</programlisting>
+	<para>We add the dc-views first then create the containers for the
+		layout. Each frame needs to have a root container named "main", so we
+		add this with card layout and the two main canvases. The first canvas
+		with the country filter and country list dc-views, the second canvas
+		as the editor zone contains the country master edit form and the
+		editable grid for the details.</para>
+	<para>The next step in the initialization process is to define the
+		toolbars:</para>
+	<programlisting>_defineToolbars_: function() {
+		this._getBuilder_()
+			.beginToolbar("tlbCountryList", {dc:"country"}).addQuery().addEdit().addNew().addCopy().addDeleteSelected().end()
+			.beginToolbar("tlbCountryEdit", {dc:"country"}).addSave().addNew().addCopy().addCancel().addPrevRec().addNextRec().end()
+			.beginToolbar("tlbRegionList", {dc:"region"}).addQuery().addSave().addNew().addCopy().addDeleteSelected().addCancel().end(); 	
+	}</programlisting>
+	<para>From the builder we initiate a toolbar creation with
+		beginToolbar, then add all the actions we want either standard
+		data-control events like the above or any other button/action
+		configuration. Finally we have to explicitly call the end() method to
+		finalize the creation of the toolbar.</para>
+	<para>Using this approach ensures that the toolbar buttons state is
+		automatically binded to record(s) state/context and the buttons are
+		accordingly enabled/disabled. Although the <literal>addXXX()</literal> methods have no
+		arguments here, they accept an <literal>Ext.Action</literal> configuration object and
+		also several DNet specific properties like <literal>dc:dcName</literal> which binds the
+		action to a different data-control as the default one set at toolbar
+		level.</para>
+	<para>At last we link together all the components in the <literal>_linkElements_</literal>
+		method</para>
+	<programlisting>_linkElements_: function() {
+		this._getBuilder_()		
+		 	.addChildrenTo("main", ["canvas1","canvas2"]) 				 		
+			.addChildrenTo("canvas1",["countryFilter","countryList"] ,["north","center"])	
+			.addChildrenTo("canvas2",["countryEdit","regionEditList"] ,["north","center"])	
+		 	.addToolbarTo("canvas1","tlbCountryList")	  	
+		 	.addToolbarTo("canvas2","tlbCountryEdit")	  	
+		 	.addToolbarTo("regionEditList","tlbRegionList");	  	
+	}</programlisting>
+	<para>Add the children to their parents and link the toolbars. This
+		definition creates the following result:</para>
+	<mediaobject>
+		<imageobject>
+			<imagedata align="center" fileref="images/canvas1.png" />
+		</imageobject>
+		<caption>Canvas 1 with filter and result list</caption>
+	</mediaobject>
+	<mediaobject>
+		<imageobject>
+			<imagedata align="center" fileref="images/canvas2.png" />
+		</imageobject>
+		<caption>Canvas 2 with master editor and details editable grid
+		</caption>
+	</mediaobject>
+</chapter>

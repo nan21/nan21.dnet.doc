@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="ui-assignments">
+	<title>Assignment windows</title>
+	<para>An assignment window is a component which provides a convenient
+		way to perform multiple record selection. For example assign roles to
+		a user, add users to a group, add products to a category and so on.
+		From functional perspective is similar to the standard multi-selection
+		widgets, the difference is that it shows the available/selected
+		options in paged lists and also has a simple filter.</para>
+	<section>
+		<title>Define component</title>
+		<para>The following code is an example of such a component definition,
+			the one which is used in the user definition frame to assign roles to
+			the user being edited:</para>
+		<programlisting>Ext.ns("net.nan21.dnet.module.ad.usr.asgn");
+net.nan21.dnet.module.ad.usr.asgn.UserRoles = Ext.extend(dnet.base.AbstractAsgn, {
+	dsName: "UserRoles", 
+	recordFields : [{name:"id",type:"int"},{name:"name",type:"string"},{name:"description",type:"string"}]
+});	 
+
+net.nan21.dnet.module.ad.usr.asgn.UserRoles$List = Ext.extend( dnet.base.AbstractAsgnGrid, {
+	_defineColumns_: function () {
+		this._getBuilder_()		
+		.addTextColumn( {name:"id", header:"id", dataIndex:"id", hidden:true, width:100})
+		.addTextColumn( {name:"name", header:"name", dataIndex:"name", width:150 })
+		.addTextColumn( {name:"description", header:"description", dataIndex:"description", width:150 })
+	} 
+});
+Ext.reg("net.nan21.dnet.module.ad.usr.asgn.UserRoles$Left", net.nan21.dnet.module.ad.usr.asgn.UserRoles$List);
+Ext.reg("net.nan21.dnet.module.ad.usr.asgn.UserRoles$Right", net.nan21.dnet.module.ad.usr.asgn.UserRoles$List); 
+
+net.nan21.dnet.module.ad.usr.asgn.UserRoles$Ui = Ext.extend(dnet.base.AbstractAsgnUi, {
+ 	 width:700
+	,height:400 
+	,title:"Assign roles to user"
+	,_controller_:net.nan21.dnet.module.ad.usr.asgn.UserRoles
+
+	,_defineElements_: function () {
+		this._getBuilder_()
+			.addLeftGrid({ xtype:"net.nan21.dnet.module.ad.usr.asgn.UserRoles$Left"})
+			.addRightGrid({ xtype:"net.nan21.dnet.module.ad.usr.asgn.UserRoles$Right"})
+	}
+});	 
+Ext.reg("net.nan21.dnet.module.ad.usr.asgn.UserRoles$Ui", net.nan21.dnet.module.ad.usr.asgn.UserRoles$Ui);</programlisting>
+		<para>
+			First we declare the main view-controller with the model definition.
+			As usual it extends an abstract base class
+			<literal>dnet.base.AbstractAsgn</literal>
+			. Next we create a grid which displays the results and map it to the
+			left and right list. The left grid shows the available roles to
+			select from, the right grid shows the roles already assigned to the
+			user. In this situation one grid component is enough as we want to
+			see the same information in both lists.
+		</para>
+		<para>The next step is to wire up the components into a window object.
+		</para>
+		<para>The code above creates a component as shown below:</para>
+		<mediaobject>
+			<imageobject>
+				<imagedata align="center" fileref="images/asgn.png" />
+			</imageobject>
+		</mediaobject>
+	</section>
+	<section>
+		<title>Usage</title>
+		<para>Please see the application frames to understand the concept,
+			here is shown only how to call such an assignment window in a frame.
+		</para>
+		<programlisting>,_defineElements_: function() {	
+
+	    this._getBuilder_()	
+		.addButton({name:"btnAsgnRoles",text:"Roles", tooltip:"Assign roles",disabled:true
+			,handler: this.onBtnAsgnRoles,scope:this,stateManager:{name:"record_is_clean", dc:"usr"}	})	
+
+		// ........ the rest of the elements omitted 	 	 	 
+
+	}
+
+	,onBtnAsgnRoles: function() {
+		this.showAsgnWindow(net.nan21.dnet.module.ad.usr.asgn.UserRoles$Ui ,{dc:"usr",objectIdField:"id"});
+	}	
+	</programlisting>
+		<para>
+			A button is declared with the click handler function delegating to
+			the
+			<literal>onBtnAsgnRoles</literal>
+			function which opens the window. Please note that the button's
+			enabled/disabled state is bound to a predefined state manager:
+		</para>
+		<programlisting>stateManager:{name:"record_is_clean", dc:"usr"}</programlisting>
+		<para>which ensures that the button is enabled only when the current
+			record is in clean state.</para>
+	</section>
+</chapter>

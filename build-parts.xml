@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<project name="docbook-src" basedir="." default="build">
+   
+	<property file="build.properties" />
+	
+	<path id="xalan.classpath">
+		<pathelement location="${basedir}/lib/xalan/serializer.jar" />
+		<pathelement location="${basedir}/lib/xalan/xalan.jar" />
+		<pathelement location="${basedir}/lib/xalan/xercesImpl.jar" />
+		<pathelement location="${basedir}/lib/xalan/xml-apis.jar" />
+	</path>
+	
+	<property name="src" value="${basedir}/src" />
+	<property name="tmp" value="${basedir}/tmp" />
+	<property name="out" value="${basedir}/target" />
+	<property name="xslt.html" value="${basedir}/docbook-xsl/html/docbook.xsl" />
+	 
+	   
+	<target name="build" depends="prepare">		 
+		<xslt style="${xslt.html}"
+			classpathref="xalan.classpath"
+			extension=".html" 
+			basedir="${src}" 
+			destdir="${out}">
+				<include name="books/**/ch*.xml" />		
+				<param name="html.stylesheet" expression="../style.css" />
+		</xslt>
+	</target>
+					
+	<target name="prepare">		 
+		<copy todir="${out}/books" >
+			<fileset dir="${src}/books" includes="*/images/*" />			 
+		</copy> 
+		<copy todir="${out}/books" file="${src}/resources/css/style.css" />
+		<copy todir="${out}/books" file="${src}/resources/images/logo.png" />		
+	</target>
+ <!-- 
+	<target name="xinclude"  >		 
+			<xsl.xinclude  
+				in="${path.src}/index.xml" 
+				out="${path.tmp}/index.xml" />
+		</target>
+	-->
+</project>

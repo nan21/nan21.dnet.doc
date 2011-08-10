@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="ui-data-control-views">
+	<title>Data-control views</title>
+	<para>As we have already seen the data-control is the basic building
+		block of DNet. It is an MVC group where several views present data
+		from a model (data-source) helped by a controller. This chapter is
+		about the views(V) from the data-control.</para>
+	<para>
+		Currently there are four main data-control view types:
+		<itemizedlist>
+			<listitem>
+				Filter panels
+			</listitem>
+			<listitem>
+				Read-only lists
+			</listitem>
+			<listitem>
+				Editable lists
+			</listitem>
+			<listitem>
+				Edit forms
+			</listitem>
+		</itemizedlist>
+		Each view extends an abstract view which further extends the proper
+		extjs component. Lets have a look at each of them see how they are
+		built and how can be extended.
+	</para>
+	<section id="filter">
+		<title>Filter panels</title>
+		<para>The filter forms are used to enter filter criteria for queries.
+			Below is an example of a filter form definition for countries.</para>
+		<programlisting>
+	Ext.ns('net.nan21.dnet.module.bd.geo.dc'); 
+	net.nan21.dnet.module.bd.geo.dc.Country$Filter = Ext.extend(dnet.base.AbstractDcvFilterForm, { 
+		_defineElements_: function () {	
+			//controls	
+			this._getBuilder_()	
+			.addTextField({ name:"name", dataIndex:"name",anchor:"-20"   })
+			.addTextField({ name:"code", dataIndex:"code",anchor:"-20"   })
+			.addTextField({ name:"iso2", dataIndex:"iso2",anchor:"-20",maxLength:2,caseRestriction:"uppercase"  })
+			.addTextField({ name:"iso3", dataIndex:"iso3",anchor:"-20",maxLength:3,caseRestriction:"uppercase"  })
+			.addBooleanField({ name:"active", dataIndex:"active"  })
+			//containers
+			.addPanel({ name:"col1", layout:"form",width:210  })
+			.addPanel({ name:"col2", layout:"form",width:210  })
+			.addPanel({ name:"col4", layout:"form",width:210  })
+			.addPanel({ name:"main", layout:"hbox", layoutConfig: { align:'top' , pack:'start'} , autoScroll:true }); 
+		}
+		,_linkElements_: function () {
+			this._getBuilder_()
+			.addChildrenTo("main",["col1","col2","col4"])
+			.addChildrenTo("col1",["name","code"])
+			.addChildrenTo("col2",["iso2","iso3"])
+			.addChildrenTo("col4",["active"]);
+		}
+	}); 
+	Ext.reg("net.nan21.dnet.module.bd.geo.dc.Country$Filter", net.nan21.dnet.module.bd.geo.dc.Country$Filter ); 
+</programlisting>
+		<para>
+			Defining a filter form is exactly the same as defining an edit form.
+			The only difference is that this time we extend the
+			<literal>dnet.base.AbstractDcvFilterForm</literal>
+			. As with the edit forms, the filter form is automatically binded to
+			the controller's filter object and ensures a real time
+			synchronization between the filter value-object and the corresponding
+			user interface field.
+		</para>
+		<para>The above definition renders the following view:</para>
+		<mediaobject>
+			<imageobject>
+				<imagedata align="center" fileref="images/filter.png" />
+			</imageobject>
+		</mediaobject>
+	</section>
+	<section id="grid">
+		<title>Read-only lists</title>
+		<para>Below is an example of grid definition for countries.</para>
+		<programlisting>
+	Ext.ns('net.nan21.dnet.module.bd.geo.dc');	 	 
+	net.nan21.dnet.module.bd.geo.dc.Country$List = Ext.extend(dnet.base.AbstractDcvGrid, {
+	
+		 _defineColumns_: function () {	
+			this._getBuilder_()	
+			.addTextColumn({ name:"name", dataIndex:"name",width:200 })   	
+			.addTextColumn({ name:"code", dataIndex:"code",width:100 })   	
+			.addTextColumn({ name:"iso2", dataIndex:"iso2",width:50 })   	
+			.addTextColumn({ name:"iso3", dataIndex:"iso3",width:50 })   	
+			.addBooleanColumn({ name:"active", dataIndex:"active"})   	     
+			.addTextColumn({ name:"notes", dataIndex:"notes", hidden:true,width:200 })   	
+			.addBooleanColumn({ name:"hasRegions", dataIndex:"hasRegions"})   	     
+			.addNumberColumn({ name:"id", dataIndex:"id", hidden:true,format:"0",width:70 })  
+			.addDateColumn({ name:"createdAt", dataIndex:"createdAt", hidden:true })   	      	     
+			.addDateColumn({ name:"modifiedAt", dataIndex:"modifiedAt" })   	      	     
+			.addTextColumn({ name:"createdBy", dataIndex:"createdBy", hidden:true,width:100 })   	
+			.addTextColumn({ name:"modifiedBy", dataIndex:"modifiedBy",width:100 })   	
+		  ;		   
+		}
+	}); 
+	Ext.reg("net.nan21.dnet.module.bd.geo.dc.Country$List", net.nan21.dnet.module.bd.geo.dc.Country$List ); 		</programlisting>
+		<para>This definition creates the following view:</para>
+		<mediaobject>
+			<imageobject>
+				<imagedata align="center" fileref="images/grid.png" />
+			</imageobject>
+		</mediaobject>
+		<para>All components are given fully qualified names to avoid name
+			conflicts.</para>
+		<para>
+			The columns definition is passed to a builder which adds some
+			reasonable defaults for properties which are not provided, injects
+			various internal references and stores the column's configuration
+			object into a local map (Ext.util.MixedCollection). After that
+			various user extension functions can be applied to customize them.
+			Each view type has its own builder for example
+			<literal>dnet.base.DcvGridBuilder</literal>
+			is the one used by the
+			<literal>AbstractDcvGrid</literal>.
+		</para>
+		<para>The columns definition is built in the <literal>_defineColumns_()</literal>
+			function which is called from the parent's <literal>initComponent()</literal> method as
+			shown below:</para>
+		<programlisting>
+	,initComponent: function(config) {
+	 //.....
+	  if (this._beforeDefineColumns_() !== false ) {
+	    this._defineColumns_();
+	    this._afterDefineColumns_();
+	  }
+	 //.....
+	}
+</programlisting>
+		<para>You can call in your overrides the <literal>_beforeDefineColumns_()</literal> or the
+			<literal>_afterDefineColumns_()</literal> to change provided functionality, or of course
+			you can entirely overwrite the <literal>_defineColumns_()</literal> method:</para>
+		<programlisting>Ext.override(net.nan21.dnet.module.bd.geo.dc.Country$List, {
+
+  _afterDefineColumns_: function() {
+
+    // using the builder(recommended): 
+
+    this._getBuilder_()
+    .change("name", {disabled:true, fieldLabel:"New label"}) // overwrites specified properties
+    .merge("name", {disabled:true, fieldLabel:"New label"}) // add the missing properties
+    ;
+
+
+     // Or use generic api method:
+     var nameColumnConfig = this._getElementConfig_("name");
+
+     // Or use the internals to lookup the element(not recommended):
+     var nameColumnConfig = this._elems_.get("name");
+
+
+    // .. do something with it ....
+
+
+  }
+})</programlisting>
+		<para>There is also a <literal>_getElement_(elementName)</literal> function which returns
+			the real object instance after instantiation. The builder also has a
+			utility addAllFromDataSource function which automatically creates
+			column definitions from the data-source fields: Using this method
+			your grid definition would look like:</para>
+		<programlisting>
+Ext.ns('net.nan21.dnet.module.bd.geo.dc');	 	 
+net.nan21.dnet.module.bd.geo.dc.Country$List = Ext.extend(dnet.base.AbstractDcvGrid, {
+	_defineColumns_: function () {	
+	    this._getBuilder_()
+		.addAllFromDataSource();		   
+	}
+}); 
+Ext.reg("net.nan21.dnet.module.bd.geo.dc.Country$List", net.nan21.dnet.module.bd.geo.dc.Country$List );
+</programlisting>
+		<para>Although the builder tries to do some guessing which you can
+			override with your own rules a fine tuning of the result might be
+			necessary. You can do this similar as shown above.</para>
+		<programlisting>
+	,_defineColumns_: function () {	
+	    this._getBuilder_()
+		.addAllFromDataSource()
+            .change("name", {sortable:false})
+            .change("modifiedAt", {hidden:true}) 
+	    .remove("notes");	   
+	}
+	</programlisting>
+		<para>
+			As we have seen the same result is achieved in both situations with
+			or without the builder. Using the builder however has several
+			advantages such as:
+			<itemizedlist>
+				<listitem>
+					Allows to implement in one place a set of conventions to specify
+					defaults which ensures a consistency across the entire application
+				</listitem>
+				<listitem>
+					Reduces the amount of coding required to define your objects.
+				</listitem>
+				<listitem>
+					Gives an extra protection against changes in future releases either
+					in DNet core or in Extjs.
+				</listitem>
+				<listitem>
+					and of course a bit more fluent coding style
+				</listitem>
+			</itemizedlist>
+		</para>
+	</section>
+	<section id="editor">
+		<title>Edit forms</title>
+		<para>The edit forms are used to edit one record at a time. Below is
+			an example of an edit form definition for countries.</para>
+		<programlisting>Ext.ns('net.nan21.dnet.module.bd.geo.dc');	 
+net.nan21.dnet.module.bd.geo.dc.Country$Edit = Ext.extend(dnet.base.AbstractDcvForm, {
+	_defineElements_: function () {	
+		//controls	
+		this._getBuilder_()	
+		.addTextField({ name:"code", dataIndex:"code", width:200 ,allowBlank:false,maxLength:32,vtype:"alphanum"  })
+		.addTextField({ name:"name", dataIndex:"name", width:200 ,allowBlank:false,maxLength:255  })
+		.addTextArea({ name:"notes", dataIndex:"notes",height:40, width:200   })
+		.addCheckbox({ name:"active", dataIndex:"active"  })
+		.addCheckbox({ name:"hasRegions", dataIndex:"hasRegions"  })
+		.addTextField({ name:"iso2", dataIndex:"iso2",anchor:"-20" ,maxLength:2,caseRestriction:"uppercase",vtype:"alphanum"  })
+		.addTextField({ name:"iso3", dataIndex:"iso3",anchor:"-20" ,maxLength:3,caseRestriction:"uppercase",vtype:"alphanum"  })
+		//containers
+		.addPanel({ name:"col1", layout:"form" , width:350  })     
+		.addPanel({ name:"col2", layout:"form" , width:220  })     
+		.addPanel({ name:"main", layout:"hbox", layoutConfig: { align:'top' , pack:'start'}, autoScroll:true }) 
+		;     
+	}
+	,_linkElements_: function () {
+		this._getBuilder_()
+		.addChildrenTo("main",["col1" ,"col2" ])
+		.addChildrenTo("col1",["name","code","notes"])
+		.addChildrenTo("col2",["iso2","iso3","active", "hasRegions"]);
+	}	
+});
+Ext.reg("net.nan21.dnet.module.bd.geo.dc.Country$Edit", net.nan21.dnet.module.bd.geo.dc.Country$Edit ); </programlisting>
+		<para>This definition creates the following view:</para>
+		<mediaobject>
+			<imageobject>
+				<imagedata align="center" fileref="images/form.png" />
+			</imageobject>
+		</mediaobject>
+		<para>As one can see it is almost the same to define an edit form as
+			it is to define a grid.</para>
+		<para>The defineElements builder method is called from the parent
+			abstract class initComponent method and it feeds some component
+			configuration properties into the builder. The only different thing
+			is the _linkElements_ method which separately puts together the
+			hierarchy. Of course it could had been done directly in the
+			definition, you can do it the way you want. This way you can override
+			one method and more easily change the way the items are arranged.
+		</para>
+		<para>The edit form is binded to the underlying model so that any
+			change made by the user in the form field is reflected in real time
+			in the model object as well as any modification done programmatically
+			to the model object property is propagated in real time to the user
+			interface field. This binding is managed by the Ext.ux.data.BindMgr
+		</para>
+		<para>There are also several properties to make easier standard
+			features like disable a field only when insert a
+			record(disabledInsert:true) or only when update a
+			record(disabledUpdate:true). When a new record is binded to the form
+			(select a record from list or create a new one) all the fields marked
+			with disabledInsert or disabledUpdate are set accordingly.</para>
+	</section>
+	<section id="notes">
+		<title>Notes</title>
+		<para>As we have seen there are two naming methods: with and without
+			underscores. AbstractDcvForm._defineElements_ but
+			DcvFormBuilder.addAllFromDataSource</para>
+		<para>The convention is:</para>
+		<itemizedlist>
+			<listitem>
+				The classes which doesn't extend Extjs components or extend the
+				Ext.util.Observable( which is assumed that will not change) have
+				standard camel case naming without underscores.
+			</listitem>
+			<listitem>
+				All classes which extend Extjs components are marked with
+				underscores to prevent possible conflicts with future changes in the
+				extended component. AbstractDcvForm extends the Ext.form.FormPanel
+				thus all its own methods are delimited with underscores:
+				_defineElements_, _linkElements_, etc . The only exception in this
+				case is the situation where it has to implement certain methods
+				expected by external functions. For example the binding manager
+				needs all the managed views to implement a certain interface:
+				<programlisting> 
+	,onBind:function(record) ;
+	,onUnbind:function(record);
+	,afterEdit:function(record);
+	,afterReject:function(record);
+	,updateBound:function(record);</programlisting>
+			</listitem>
+		</itemizedlist>
+	</section>
+</chapter>

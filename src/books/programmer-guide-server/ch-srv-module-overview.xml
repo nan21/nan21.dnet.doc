@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="srv-module-overview">
+	<title>Module bundles overview</title>
+	<para>A module is an implementation unit which groups together related
+		business features. It can be a standalone domain-specific package or a
+		set of user-extensions for existing modules or whatever you may wish
+		to group together.</para>
+	<para>The main DNet modules are standard implementations for various
+		domains required by an enterprise such as business partners
+		management, human resources, material management, sales and
+		distribution and so on. Standard implementation means that the usual
+		basic issues which are very likely to apply to most of the cases are
+		provided by default, user specific needs are implemented with
+		extension modules.</para>
+	<para>Technically speaking, a module is a collection of bundles where
+		each bundle implements a certain layer. The standard DNet module has
+		the following bundles:</para>
+	<itemizedlist>
+		<listitem>
+			domain bundle which contains the domain entities and their event
+			handlers
+		</listitem>
+		<listitem>
+			business (jpa) bundle which is a transactional layer with business
+			services and works with domain entities
+		</listitem>
+		<listitem>
+			presenter bundle where the view-model objects are defined and its
+			role is to prepare view-objects from domain-entities to be used in
+			user-interface as well as conversion from the view-objects to domain
+			entities to be persisted the changes
+		</listitem>
+		<listitem>
+			user interface bundle which contains the extjs based view elements.
+		</listitem>
+	</itemizedlist>
+	<para>Each "server-side" bundle may have or not some internal functions
+		visible only for its own usage as well as services exposed for the
+		other bundles who may wish to consume them. The business bundle
+		exposes its services through an entity-service factory registered as
+		osgi service, the presenter does the same with its data-source
+		handlers.</para>
+	<para>The current user-interface implementation is based on Extjs and
+		is provided by the dnet.module.xx.ui.extjs bundles. These bundles
+		contain just a collection of static javascript files which are very
+		good candidates to be deployed on a different http server which plays
+		the role of a static resources provider. For this reason these bundles
+		do not register themselves their own views, instead, the presenter
+		bundles register the view providers on behalf of the module's UI
+		bundle.</para>
+	<para>With this architecture its relatively easy to use, reuse, change
+		or replace various pieces from the standard implementation.</para>
+	<itemizedlist>
+		<listitem>
+			Those who do not like the presenter layer and wish to work only with
+			domain entities have the possibility to create their own controllers
+			which interact directly with the business layer.
+		</listitem>
+		<listitem>
+			Those who want different user interface can reuse the server-side and
+			place a different UI on top of it
+		</listitem>
+		<listitem>
+			Of course those who do not like the java server-side and would like
+			to reuse the existing user-interfaces can do so, create their own
+			php, ruby, groovy or whatever else server-side implementation for the
+			data-source providers.
+		</listitem>
+	</itemizedlist>
+	<section>
+		<title>Domain bundles</title>
+		<para>
+			A typical domain bundle is a standard maven 2 project which contains
+			the domain entities, event handlers and the necessary information to
+			perform static weaving. Usually it requires the jpa/eclipselink
+			libraries, the API bundle from the core nan21.dnet.core.api and
+			domain library from the core which contains some base classes
+			<literal>nan21.dnet.core.domain</literal>
+			.
+		</para>
+		<para>
+			The static weaving is configured in eclipselink-static-weave.xml
+			invoked from the
+			<literal>pom.xml</literal>
+			during the maven build.
+		</para>
+	</section>
+	<section>
+		<title>Business bundles</title>
+		<para>The business bundle is a transactional layer which implements
+			the business functions as transactional services, as well as helper
+			repository functions like finders. It configures a persistence
+			context, declares all the available services as local spring beans
+			and publishes a service factory as osgi-service.</para>
+		<para>Let's have a look at the following snippets as examples:</para>
+		<programlisting language="java"><![CDATA[ 
+		public interface IUserService extends IEntityService<User> {
+
+		    public User findByCode(Long clientId, String code);
+		    public List<User> findByRoles(Role roles);
+		    public List<User> findByRolesId(Long rolesId);
+		    public List<User> findByGroups(UserGroup groups);
+		    public List<User> findByGroupsId(Long groupsId);
+		
+		}
+		]]></programlisting>
+		<para>
+			Service naming by convention is entity name suffixed with "Service"
+			for implementation and the interface name further prefixed with an
+			"I". So the service implementation for the User domain entity is
+			<literal>UserService</literal>, the interface is
+			<literal>IUserService</literal>
+			.
+		</para>
+		<para>
+			The interface extends a generic base entity service interface
+			<literal>IEntityService&lt;E&gt;</literal>
+			and adds entity specific function declarations as seen above.
+		</para>
+		<para>
+			The spring configuration files are located in
+			<literal>src/main/resources/spring</literal>
+			and consist of the well known
+			<literal>module-context.xml</literal>
+			for local beans and
+			<literal>osgi-context.xml</literal>
+			for the osgi services/references, as well as a
+			<literal>beans</literal>
+			folder which contains the actual service declarations.
+		</para>
+		<itemizedlist>
+			<listitem>
+				<literal>module-context.xml</literal>
+				contains service factories as spring beans, imports the service
+				declarations from the "beans" folder and registers view-providers on
+				behalf of the ui.extjs bundle.
+				<programlisting language="xml"><![CDATA[
+		<!-- JPA EntityManagerFactory -->
+		<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" ...
+	            // rest is omitted
+	
+		<!-- Transaction manager -->
+		<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager" ...
+	          // rest is omitted
+	
+	        // transaction advices
+		<tx:advice id="txAdvice" .......
+	          // rest is omitted
+	
+		<!-- Domain services -->
+		<import resource="beans/ad.usr.entity.xml" />
+		<import resource="beans/ad.workflow.entity.xml" />
+	          ........
+	          // rest is omitted
+
+		]]></programlisting>
+			</listitem>
+			<listitem>
+				<literal>osgi-context.xml</literal>
+				creates a reference to the osgi data-source and publishes the
+				service factories
+				<programlisting language="xml"><![CDATA[
+		<osgi:reference id="osgiDataSource" cardinality="0..1"
+			interface="javax.sql.DataSource" />
+	
+		<osgi:service ref="entityServiceFactory" ranking="0"
+			interface="net.nan21.dnet.core.api.service.IEntityServiceFactory" />
+	
+		<osgi:service ref="asgnTxServiceFactory" ranking="0"
+			interface="net.nan21.dnet.core.api.service.IAsgnTxServiceFactory" />]]>
+			</programlisting>
+			</listitem>
+			<listitem>
+				Service declaration files
+				<programlisting language="xml" linenumbering="numbered"><![CDATA[
+			<bean id="UserService" scope="prototype"
+			  		class="net.nan21.dnet.module.ad.usr.business.serviceimpl.UserService"  />  
+		
+		 	<bean id="UserGroupService" scope="prototype"
+			  		class="net.nan21.dnet.module.ad.usr.business.serviceimpl.UserGroupService"  />
+		    ....
+        ]]></programlisting>
+			</listitem>
+		</itemizedlist>
+	</section>
+	<section>
+		<title>Presenter bundle</title>
+		<para>A presenter bundle is responsible to define view-model objects
+			and implement the necessary functions to work with them. Basically it
+			is an adaptor between the domain model and the user-interface;
+			defines the model required by the UI and provides the convertors
+			to/from domain-entity/view-model. These view-models in DNet are of
+			two types:</para>
+		<itemizedlist>
+			<listitem>
+				data-sources (ds) used by data-controls(dc) and lists of values or
+				comboboxes (lov)
+			</listitem>
+			<listitem>
+				assignment models used by assignment windows
+			</listitem>
+		</itemizedlist>
+		<para>In the following the data-sources(ds) are used as reference to
+			describe the concepts, however everything is very similar for the
+			assignment components also.</para>
+		<para>The central piece is a ds-service described by the
+			<literal>net.nan21.dnet.core.api.service.IDsService</literal> interface, which in very
+			simple terms implements the following:</para>
+		<itemizedlist>
+			<listitem>
+				finders: load entities according to filter criteria and repack them
+				into view-model objects to be sent to client.
+			</listitem>
+			<listitem>
+				insert/update/delete: apply changes sent from client to the
+				corresponding domain entities and delegate the execution to the
+				proper transactional service-method in the business layer.
+			</listitem>
+			<listitem>
+				"rpc" methods: these are various services defined as delegates and
+				implement "do-whatever-you-want-with-this-view-model-object" either
+				in a presenter delegate (non-transactional) or delegating the
+				transactional operations to a proper service-method in the
+				business-layer.
+			</listitem>
+		</itemizedlist>
+		<para>The bundle's configuration is similar to the one described above
+			for the business layer. The spring configuration files are located in
+			<literal>src/main/resources/spring</literal> and contain the same <literal>module-context.xml</literal> for
+			local beans and <literal>osgi-context.xml</literal> for the osgi services/references, as
+			well as a <literal>beans</literal> folder which contains the actual service
+			declarations.</para>
+		<itemizedlist>
+			<listitem>
+				<literal>module-context.xml</literal> contains service factories as spring beans,
+				imports the service declarations from the <literal>beans</literal> folder and
+				registers view-providers on behalf of the ui.extjs bundle.
+				<programlisting language="xml"><![CDATA[
+		<bean id="dsServiceFactory"
+				class="net.nan21.dnet.core.presenter.service.DsServiceFactory">
+			 <property name="entityServiceFactories" ref="osgiEntityServiceFactories"></property>
+		</bean>
+	
+		<bean id="menuProvider"
+						class="net.nan21.dnet.core.api.ui.extjs.impl.ExtensionProvider">
+			<property name="fileName" value="src/menu.js"></property>
+			<property name="bundleName" value="nan21.dnet.module.bd.ui.extjs"></property>
+		</bean>
+		]]></programlisting>
+			</listitem>
+			<listitem>
+				<literal>osgi-context.xml</literal> mainly publishes its own service factories and
+				imports other service factories for example entity-service factory
+				to look-up the required transactional business services. It also
+				publishes the ui related extensions if any.
+				<programlisting language="xml" linenumbering="numbered"><![CDATA[
+		//  ........
+
+		<osgi:service ref="dsServiceFactory" ranking="0"
+						interface="net.nan21.dnet.core.api.service.IDsServiceFactory" />
+	
+		<osgi:list id="osgiEntityServiceFactories" cardinality="1..N"
+						interface="net.nan21.dnet.core.api.service.IEntityServiceFactory" />	
+	
+	
+		<osgi:service ref="menuProvider" ranking="0"
+						interface="net.nan21.dnet.core.api.ui.extjs.IExtensionProvider" />
+	
+	       //  ........
+       ]]></programlisting>
+			</listitem>
+			<listitem>
+				Service declaration files define the ds-service spring beans used by
+				the web-controller to process the request
+				<programlisting language="xml"><![CDATA[
+		<bean id="UserDsService" scope="prototype"
+					class="net.nan21.dnet.core.presenter.service.BaseDsService">
+		  	<property name="modelClass"
+						value="net.nan21.dnet.module.ad.usr.ds.model.UserDs" />
+		  	<property name="entityClass"
+						value="net.nan21.dnet.module.ad.usr.domain.entity.User" />	
+		  	<property name="converterClass"
+						value="net.nan21.dnet.module.ad.usr.ds.converter.UserDsConv" />
+		</bean>
+		]]></programlisting>
+			</listitem>
+		</itemizedlist>
+		<para>In most of the cases the default base service does the job hence
+			the <literal>BaseDsService</literal> class is used. Of course custom service
+			implementation can be created for more complex or non-standard
+			situations. The minimal configuration requires to provide values for:
+		</para>
+		<itemizedlist>
+			<listitem>
+				modelClass the view-model class, a regular java bean describing the
+				view-model
+			</listitem>
+			<listitem>
+				entityClass: the root entity it operates on
+			</listitem>
+			<listitem>
+				converterClass: an implementation of
+				<literal>net.nan21.dnet.core.api.converter.IDsConverter&lt;M, E&gt;</literal> where M stands
+				for model (the generic type for the view-model) and E for the
+				entity. It requires two methods to be implemented:
+				<programlisting language="xml"><![CDATA[
+		public void modelToEntity(M m, E e) throws Exception ;
+		public void entityToModel(E e, M m) throws Exception ;
+		]]></programlisting>
+			</listitem>
+		</itemizedlist>
+	</section>
+	<section>
+		<title>Extjs user interface bundle</title>
+		<para>This bundle contains the extjs based user-interface elements
+			definitions, basically a collection of static javascript files. These
+			can be data-control views, application frames, assignment windows,
+			menu contributions etc. These UI elements are one of the following
+			two categories:</para>
+		<itemizedlist>
+			<listitem>
+				component definition: A new component is created inside the bundle
+				like a new data-control, frame, etc
+			</listitem>
+			<listitem>
+				component extension: An extension is defined for an already existing
+				component defined in a different ui.extjs bundle. This can be a menu
+				contribution or an enhancement of other types of elements like
+				frames or data-controls defined elsewhere.
+			</listitem>
+		</itemizedlist>
+		<para>As these bundles may be deployed to a different web-server which
+			would play the role of a static resources provider, in this situation
+			these extensions doesn't have the opportunity to notify the rest of
+			the application about what they provide, thus these extensions are
+			published by the presenter bundle of the module on behalf of the
+			ui.extjs module as previously described.</para>
+		<note>
+			The modules usually do not have a "web" bundle, the requests are
+			intercepted by the base controllers defined in nan21.dnet.core.web.
+			Those un-serialize the request data and delegates the execution to
+			the proper ds-service. The result of the execution is then serialized
+			and sent back as response.
+		</note>
+	</section>
+</chapter>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<project name="docbook-src" basedir="." default="build">
+   
+	<property file="build.properties" />
+	  
+	<property name="src" value="${basedir}/src" />
+	<property name="tmp" value="${basedir}/tmp" />
+	<property name="out" value="${basedir}/target" />
+	<property name="xslt.html" value="${basedir}/docbook-xsl/html/docbook.xsl" />
+	  
+	<target name="build" depends="clean"  >		 
+		<xsl.xinclude  
+			in="${src}/books/programmer-guide-ui/index.xml" 
+			out="${tmp}/books/programmer-guide-ui/index.xml" />
+		<xsl.xinclude  
+			in="${src}/books/programmer-guide-server/index.xml" 
+			out="${tmp}/books/programmer-guide-server/index.xml" />	
+		<xsl.xinclude  
+			in="${src}/books/installation-guide/index.xml" 
+			out="${tmp}/books/installation-guide/index.xml" />	
+	</target>
+ 	<target name="clean"   >		 
+		<delete dir="${tmp}/books" />
+	</target>
+</project>

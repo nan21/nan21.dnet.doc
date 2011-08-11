@@ -19,7 +19,8 @@
 			which is an enhanced Eclipse with all the necessary plugins to
 			develop Spring based java web application. Download and start STS.
 			DNet's development is done with STS 2.3.0 but STS 2.6.x works as
-			well. The project import described below was done with STS 2.6.1. </para>
+			well. The project import described below was done with STS 2.6.1.
+		</para>
 		<para>
 			Please read the
 			<ulink
@@ -35,7 +36,6 @@
 			, build it and run it. Even better you might try their "Greenpages
 			sample" as well.
 		</para>
-				
 	</section>
 	<section>
 		<title>Getting the source code</title>
@@ -75,34 +75,26 @@
 	<section>
 		<title>Import DNet-Core</title>
 		<para>
-		
-		In Eclipse select from menu: File->New->Other:
-		
-		<mediaobject>
-			<imageobject>
-				<imagedata align="center"
-					fileref="images/eclipse-import-window.png" />						
-			</imageobject>
-			<caption>Import project wizzard</caption>
-		</mediaobject>
-			
-		On clicking "Next" the 	following dialog opens, of course with no selection. 
-		Click browse and select the root folder which contains the unzipped DNet-Core source code
-			Click OK in the file browser and you should have all the projects marked to be imported.
-			Optionally group them into a working-set.
-			When you are ready click "Finish".
-			 
+			In Eclipse select from menu: File->New->Other:
 			<mediaobject>
 				<imageobject>
-					<imagedata align="center"
-						fileref="images/eclipse-import-projects.png" />
+					<imagedata align="center" fileref="images/eclipse-import-window.png" />
+				</imageobject>
+				<caption>Import project wizzard</caption>
+			</mediaobject>
+			On clicking "Next" the following dialog opens, of course with no
+			selection. Click browse and select the root folder which contains the
+			unzipped DNet-Core source code Click OK in the file browser and you
+			should have all the projects marked to be imported. Optionally group
+			them into a working-set. When you are ready click "Finish".
+			<mediaobject>
+				<imageobject>
+					<imagedata align="center" fileref="images/eclipse-import-projects.png" />
 				</imageobject>
 				<caption>Select Maven projects to import</caption>
 			</mediaobject>
- 	
-			 
-			After the import you should be able to see the following in your package explorer, while Eclipse starts building the projects:
-			
+			After the import you should be able to see the following in your
+			package explorer, while Eclipse starts building the projects:
 			<mediaobject>
 				<imageobject>
 					<imagedata align="center"
@@ -110,36 +102,30 @@
 				</imageobject>
 				<caption>DNet-Core projects</caption>
 			</mediaobject>
-			
-			For the first time the build may take a longer time as Maven downloads all the required dependencies.
-			 
-			When it has finished the build you should set up a runtime environment for the imported projects.
-			Go to menu File->New->Other which opens once again the New... wizard
-			 
+			For the first time the build may take a longer time as Maven
+			downloads all the required dependencies. When it has finished the
+			build you should set up a runtime environment for the imported
+			projects. Go to menu File->New->Other which opens once again the
+			New... wizard
 			<mediaobject>
 				<imageobject>
-					<imagedata align="center"
-						fileref="images/eclipse-new-server.png" />
+					<imagedata align="center" fileref="images/eclipse-new-server.png" />
 				</imageobject>
 				<caption>Setup a new server environment in Eclipse</caption>
 			</mediaobject>
-			
-			Select the "Server" option as shon in the image and click "Next" which opens the "New Server" setup wizard.
-			
-			Go to EclipseRT->Virgo Web Server
-			
+			Select the "Server" option as shon in the image and click "Next"
+			which opens the "New Server" setup wizard. Go to EclipseRT->Virgo Web
+			Server
 			<mediaobject>
 				<imageobject>
-					<imagedata align="center"
-						fileref="images/eclipse-new-server-select.png" />
+					<imagedata align="center" fileref="images/eclipse-new-server-select.png" />
 				</imageobject>
 				<caption>Select Virgo Web Server as server type</caption>
 			</mediaobject>
-			
-			Click the "Add..." link to configure a new Server runtime environment.
-			In the configuration dialog click Browse and select the root folder of your Virgo runtime (where you extracted the zipped Virgo distribution)
-			Click "Finish" to complete the task.
-			
+			Click the "Add..." link to configure a new Server runtime
+			environment. In the configuration dialog click Browse and select the
+			root folder of your Virgo runtime (where you extracted the zipped
+			Virgo distribution) Click "Finish" to complete the task.
 			<mediaobject>
 				<imageobject>
 					<imagedata align="center"
@@ -147,24 +133,17 @@
 				</imageobject>
 				<caption>Choose an existing Virgo runtime</caption>
 			</mediaobject>
-			
-			
-			Now, go to menu Window->Show View->Other and in the selection box choose Server->Servers
-			
-			
-			
+			Now, go to menu Window->Show View->Other and in the selection box
+			choose Server->Servers
 			<mediaobject>
 				<imageobject>
-					<imagedata align="center"
-						fileref="images/eclipse-select-servers-view.png" />
+					<imagedata align="center" fileref="images/eclipse-select-servers-view.png" />
 				</imageobject>
 				<caption>Select Servers view to be displayed</caption>
 			</mediaobject>
-			
-			In the newly opened tab-view you should be able to see now the server environment configured.
-			
-			Right click your server and choose "Add And Remove". Add bundles to Virgo as shown below.			
-			 
+			In the newly opened tab-view you should be able to see now the server
+			environment configured. Right click your server and choose "Add And
+			Remove". Add bundles to Virgo as shown below.
 			<mediaobject>
 				<imageobject>
 					<imagedata align="center"
@@ -172,34 +151,96 @@
 				</imageobject>
 				<caption>Add bundles to Virgo</caption>
 			</mediaobject>
-			
-			 By now you should have all the projects compiled and the single type of error should be:
-			 
-			<literal>Target runtime virgo-tomcat-3.0.x is not defined.</literal> with various values for x
-			
-			In order to get rid of these errors right-click each project go to Properties->Targeted Runtimes and uncheck all the runtimes other then your own and click Ok.
-			 
+			By now you should have all the projects compiled and the single type
+			of error should be:
+			<literal>Target runtime virgo-tomcat-3.0.x is not defined.</literal>
+			with various values for x In order to get rid of these errors
+			right-click each project go to Properties->Targeted Runtimes and
+			uncheck all the runtimes other then your own and click Ok.
 			<mediaobject>
 				<imageobject>
-					<imagedata align="center"
-						fileref="images/eclipse-project-runtime.png" />
+					<imagedata align="center" fileref="images/eclipse-project-runtime.png" />
 				</imageobject>
 				<caption>Remove unnecesarry runtimes</caption>
 			</mediaobject>
-			
-			
-			By now all the projects should be clean and ready to start the server.
-			Start the server and wait until it loads all bundles and is is ready.
-			
-			
-			Go to your browser and type in: http://localhost:8080/nan21.dnet.core.welcome 
-			Use the port number which you configured, by default 8080.
-			
-			You should see the DNet welcome page. Congratulations, you just imported the DNet Core
- 
+			By now all the projects should be clean and ready to start the
+			server. Before this however, you must prepare the server providing
+			the dependencies required by DNet ( third party libraries and DNet
+			configuration files) plus a Virgo configuration.
+		</para>
+	</section>
+	<section>
+		<title>Prepare Virgo to run DNet</title>
+		<para>
+			Go to your Virgo installation directory and in
+			<literal>config</literal>
+			folder open
+			<literal>org.eclipse.virgo.kernel.userregion.properties</literal>
+			in a text editor. At the bottom of the file locate the following
+			line:
+			<programlisting>
+	initialArtifacts=repository:plan/org.eclipse.virgo.kernel.userregion.springdm, repository:plan/org.eclipse.virgo.web.tomcat
+	</programlisting>
+			and add to the first position a reference to
+			<literal>repository:bundle/javax.persistence</literal>
+			so that you'll have:
+			<programlisting>
+	initialArtifacts=repository:bundle/javax.persistence, repository:plan/org.eclipse.virgo.kernel.userregion.springdm, repository:plan/org.eclipse.virgo.web.tomcat
+	</programlisting>
+		</para>
+		<para>
+			Next you should add the dependencies required by DNet. The easiest
+			way to this is to download the DNet distribution package. Go to
+			<ulink url="https://sourceforge.net/projects/dnet-ebs/files/">https://sourceforge.net/projects/dnet-ebs/files/
+			</ulink>
+			and download the same release distribution as the project version you
+			checked out. After unzipping the archive you should find a
+			<literal>build</literal>
+			folder which contains the application artifacts. Copy from
+			<literal>build/lib</literal>
+			all the files to your Virgo
+			<literal>repository/usr</literal>
+			. Then from the
+			<literal>build/artifacts/config</literal>
+			copy the files to Virgo
+			<literal>config</literal>
+			folder. Change properties according to your needs.
+		</para>
+		<para> Now you are ready to start the server from Eclipse, start it
+			and wait until it loads all bundles and is ready. Go to your browser
+			and type in: http://localhost:8080/nan21.dnet.core.welcome Use the
+			port number which you configured, by default 8080. You should see the
+			DNet welcome page. Congratulations, you just imported the DNet Core
 		</para>
 	</section>
 	<section>
 		<title>Import DNet-Modules</title>
+		<para>The steps are very much the same as before, a few notes though:
+		</para>
+		<para>
+			Import the modules which you want. Please note that some modules
+			depend on others, the only stand-alone one is the administration
+			module
+			<literal>nan21.dnet.module.ad</literal>
+		</para>
+		<para>
+			If you do not import the Core to publish to it to Virgo from Eclipse,
+			then you'll need to provide it as the other dependecies. From the
+			Dnet distribution package copy from the
+			<literal>build/artifacts/core</literal>
+			folder all the bundles to your Virgo
+			<literal>repository/usr</literal>
+			the same as you did with the third party dendencies from the <literal>lib</literal> folder.
+		</para>
+		<para>
+			You can choose to import any of the modules into Eclipse, but the
+			dependent modules should be directly provided to Virgo. If you choose
+			to import only the "Sales and Distribution" module (
+			<literal>nan21.dnet.module.sd</literal>
+			) then you'll need to copy the required modules bundles to Virgo
+			<literal>repository/usr</literal>
+			In this case you'll copy all the bundles of the following modules:
+			<literal>ad,bd,bp,mm</literal>
+		</para>
 	</section>
 </chapter>

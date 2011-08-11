@@ -23,7 +23,7 @@
 			basedir="${tmp}" 
 			destdir="${out}">
 				<include name="**/*.xml" />	
-				<param name="html.stylesheet" expression="../style.css" />					 
+				<param name="html.stylesheet" expression="../style.css" />				 
 		</xslt>
 	</target>
 	

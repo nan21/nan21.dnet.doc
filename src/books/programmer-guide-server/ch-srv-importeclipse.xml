@@ -189,6 +189,27 @@
 	</programlisting>
 		</para>
 		<para>
+			In your Virgo installation directory open from the
+			<literal>lib</literal>
+			folder the
+			<literal>java6-server.profile</literal>
+			file and add to both
+			<literal>org.osgi.framework.system.packages</literal>
+			and
+			<literal>org.osgi.framework.bootdelegation</literal>
+			properties the following
+			<literal>sun.misc</literal>
+			It is a directive which tells to Virgo to delegate the loading of the
+			<literal>sun.misc</literal>
+			system packages to bootloader. The packages are imported by the
+			<literal>mvel2</literal>
+			library which is used by
+			<literal>activiti</literal>
+			workflow engine through its
+			<literal>drools</literal>
+			dependency.
+		</para>
+		<para>
 			Next you should add the dependencies required by DNet. The easiest
 			way to this is to download the DNet distribution package. Go to
 			<ulink url="https://sourceforge.net/projects/dnet-ebs/files/">https://sourceforge.net/projects/dnet-ebs/files/
@@ -230,7 +251,9 @@
 			<literal>build/artifacts/core</literal>
 			folder all the bundles to your Virgo
 			<literal>repository/usr</literal>
-			the same as you did with the third party dendencies from the <literal>lib</literal> folder.
+			the same as you did with the third party dendencies from the
+			<literal>lib</literal>
+			folder.
 		</para>
 		<para>
 			You can choose to import any of the modules into Eclipse, but the

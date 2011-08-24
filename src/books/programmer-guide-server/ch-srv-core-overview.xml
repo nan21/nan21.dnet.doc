@@ -3,4 +3,80 @@
 		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="srv-module-overview">
 	<title>Core bundles overview</title>
+	<para>DNet Core consists of a collection of bundles which contain either API interfaces or implementation base classes for all of the layers. 
+	  </para>
+	<para>TODO: For the moment there is just a brief note about each bundle, detailed explanations will follow.</para>
+	<section>
+		<title>core.api</title>
+		<para>
+			<literal>nan21.dnet.core.api</literal> contains the application API, mainly interfaces and a few generic descriptor classes.
+			It is required by most of the other bundles.  			 
+		</para>		 
+	</section>	
+	<section>
+		<title>core.welcome</title>
+		<para>
+			<literal>nan21.dnet.core.welcome</literal> is an application home-page provider which serves for branding purpose which 
+			probably will be replaced or customized in many situations. 
+			It provides a welcome page which redirects to the application's main entry-point. 
+		</para>		 
+	</section>	
+	<section>
+		<title>core.web</title>
+		<para>
+			The core web bundle <literal>nan21.dnet.core.web</literal>, implements the http request handlers, is deployed as a <literal>war</literal> bundle 
+			and it is the main entry-point at server-side for most of the http requests for the running application.			 
+		</para>
+		<para>It exposes a web API for transactional requests, session management, user interfaces and several dedicated protocols such as file upload and workflow management. </para>	
+		<para>Description of protocols .... TODO</para>	 
+	</section>
+	<section>
+		<title>core.ui.extjs</title>
+		<para>
+			<literal>nan21.dnet.core.ui.extjs</literal> contains the Extjs based user interface base, mainly static javascript files.			 
+		</para>				 
+	</section>	
+	<section>
+		<title>core.presenter</title>
+		<para>
+			<literal>nan21.dnet.core.presenter</literal> implements the base classes to manage view-model-objects used in user-interfaces. 
+			It is used for the rich client type user interfaces (such as the extjs based one), which interact with the server side through ajax requests. 
+			In case of jsp user interfaces you may want to skip this layer, 
+			so that from your controllers interact directly with the business layer for transactional requests and work with domain
+			 entities to constract the model for the jsp views. This approach is used in the <literal>nan21.dnet.core.setup</literal> bundle.					 
+		</para>	
+		<para>The role of this bundle is to provide the base functionality required to define the view-model-objects, convert to/from persistence model, service commands and delegate transactional work to the business layer.</para>
+		 
+	</section>
+	<section>
+		<title>core.business</title>
+		<para>
+			<literal>nan21.dnet.core.business</literal> implements the infrastructure for the transactional business logic.  			 
+		</para>		 
+	</section>	
+	<section>
+		<title>core.domain</title>
+		<para>
+			<literal>nan21.dnet.core.domain</literal> is a very thin base for the domain entities bundles.  			 
+		</para>		 
+	</section>	
+	<section>
+		<title>core.security</title>
+		<para>
+			<literal>nan21.dnet.core.security</literal> implements the application security rules. DNet security is built on Spring security, by default authenticates the login attempt agains the users defined in internal database tables.
+			Configure this plugin to change authentication mechanism or it can be even entirely replaced by a custom solution.  			 
+		</para>		 
+	</section>	
+	<section>
+		<title>core.workflow</title>
+		<para>
+			The main role of <literal>nan21.dnet.core.workflow</literal> is to configure and publish an Activiti <literal>ProcesEngine</literal> to be used by other bundles. 						
+		</para>		 
+	</section>	
+	<section>
+		<title>core.setup</title>
+		<para>
+			<literal>nan21.dnet.core.setup</literal> is responsible to provide the setup mechanism based on the  <literal>ISetupParticipant</literal> implementations published by the bundles wich require setup tasks to be peformed before usage.			 
+		</para>		 
+	</section>	
 </chapter>	

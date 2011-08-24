@@ -197,17 +197,16 @@
 			<literal>org.osgi.framework.system.packages</literal>
 			and
 			<literal>org.osgi.framework.bootdelegation</literal>
-			properties the following
-			<literal>sun.misc</literal>
+			properties the following two:
+			<literal>sun.misc</literal> and <literal>javax.script</literal>
 			It is a directive which tells to Virgo to delegate the loading of the
-			<literal>sun.misc</literal>
-			system packages to bootloader. The packages are imported by the
+			specified system packages to bootloader. The packages are imported by the
 			<literal>mvel2</literal>
 			library which is used by
 			<literal>activiti</literal>
 			workflow engine through its
 			<literal>drools</literal>
-			dependency.
+			dependency and a scripting engine used by activiti to render forms.
 		</para>
 		<para>
 			Next you should add the dependencies required by DNet. The easiest

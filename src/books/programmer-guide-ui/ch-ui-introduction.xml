@@ -2,5 +2,27 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="ui-introduction">
-	<title>Introduction</title>	
+	<title>Introduction</title>
+	 
+	<section>
+	<title>Extjs dependency</title>
+	<para>
+		Currently DNet runs with Extjs 3.3.0, to change it do the following:
+		<itemizedlist>
+			<listitem>
+				Download the osgi package from
+				<url>from
+					http://dnet.nan21.net/maven2repo/net/nan21/osgi/net.nan21.osgi.extjs/</url>
+				and copy it to
+				<literal>VIRGO_HOME/repository/usr</literal>. These packages are versioned according to the Extjs version which is contained.
+			</listitem>
+			<listitem>Update in <literal>net.nan21.dnet.properties</literal> the <literal>url.ui.extjs.lib.extjs</literal> property with the new value</listitem>
+		</itemizedlist>
+	</para>
+	
+	<para>
+		Alternatively can be deployed to a different location, in this case set the <literal>url.ui.extjs.lib.extjs</literal> to point to the url of your deployment 
+		for example http://domain/jslibs/extjs/3.3.0 or whatever it may be.
+	</para>
+	</section>
 </chapter>

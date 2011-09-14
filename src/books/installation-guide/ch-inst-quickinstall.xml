@@ -18,10 +18,10 @@
 			say
 			<literal>C:/dnet</literal>
 			Inside you should find a
-			<literal>virgo-tomcat-server-3.0.0.RC1</literal>
+			<literal>virgo-tomcat-server-xxx</literal>
 			folder which contains a Virgo web-server already configured to run
-			DNet. So go to
-			<literal>virgo-tomcat-server-3.0.0.RC1/bin</literal>
+			DNet; xxx stands for the server version, at the time of writing this document is 3.0.1-RELEASE. So go to
+			<literal>virgo-tomcat-server-xxx/bin</literal>
 			folder and double-click the
 			<literal>startup.bat</literal>
 			.
@@ -37,6 +37,11 @@
 		<para>Click the logo which redirects you to the application setup section. Sign-in with user 'admin' and password 'admin'.</para>
 		
 		<para>Follow on-screen instructions.</para>
+		
+		<note>
+		The default configuration uses H2 database and creates its files in $USER_HOME/dnet_ebs directory.
+		If you have started a demo from a previous version using the default configuration, you should (re)move the dnet_db_h2.* files from that directory. 
+		</note>
 		
 	</section>
 </chapter>

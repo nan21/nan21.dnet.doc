@@ -31,6 +31,7 @@
 		<copy todir="${out}/books" >
 			<fileset dir="${src}/books" includes="*/images/*" />			 
 		</copy>
+		<copy todir="${out}/books" file="${src}/books/index.html" /> 
 		<copy todir="${out}/books" file="${src}/resources/css/style.css" /> 
 		<copy todir="${out}/books" file="${src}/resources/images/logo.png" />	
 	</target> 

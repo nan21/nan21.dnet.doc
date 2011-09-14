@@ -198,9 +198,12 @@
 			and
 			<literal>org.osgi.framework.bootdelegation</literal>
 			properties the following two:
-			<literal>sun.misc</literal> and <literal>javax.script</literal>
+			<literal>sun.misc</literal>
+			and
+			<literal>javax.script</literal>
 			It is a directive which tells to Virgo to delegate the loading of the
-			specified system packages to bootloader. The packages are imported by the
+			specified system packages to bootloader. The packages are imported by
+			the
 			<literal>mvel2</literal>
 			library which is used by
 			<literal>activiti</literal>
@@ -225,6 +228,17 @@
 			copy the files to Virgo
 			<literal>config</literal>
 			folder. Change properties according to your needs.
+		</para>
+		<para>
+			In case you'd like to enable logging for dnet packages an easy way is
+			to add the following to
+			<literal>conf/serviceability.xml</literal>
+			<programlisting language="xml"><![CDATA[
+			<logger level="DEBUG" additivity="false"  name="net.nan21.dnet.core">
+				<appender-ref ref="LOG_FILE" />
+			</logger>
+	]]></programlisting>
+			Please check the Virgo documentation to configure logging.
 		</para>
 		<para> Now you are ready to start the server from Eclipse, start it
 			and wait until it loads all bundles and is ready. Go to your browser

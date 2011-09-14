@@ -133,9 +133,8 @@
 		<itemizedlist>
 			<listitem>
 				<literal>module-context.xml</literal>
-				contains service factories as spring beans, imports the service
-				declarations from the "beans" folder and registers view-providers on
-				behalf of the ui.extjs bundle.
+				contains service factories as spring beans and imports the service
+				declarations from the "beans" folder.
 				<programlisting language="xml"><![CDATA[
 		<!-- JPA EntityManagerFactory -->
 		<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" ...

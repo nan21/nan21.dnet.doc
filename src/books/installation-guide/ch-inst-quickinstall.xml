@@ -39,8 +39,8 @@
 		<para>Follow on-screen instructions.</para>
 		
 		<note>
-		The default configuration uses H2 database and creates its files in $USER_HOME/dnet_ebs directory.
-		If you have started a demo from a previous version using the default configuration, you should (re)move the dnet_db_h2.* files from that directory. 
+		The default configuration uses H2 database and creates its files in $USER_HOME/dnet_ebs/$current_version directory.
+		 where $USER_HOME is your user home on you computer and $current_version is the DNet version which is installed.
 		</note>
 		
 	</section>

@@ -1,6 +1,218 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="inst-advancedinstall">
-	<title>Advanced installation concepts</title>	
+	<title>Advanced installation concepts</title>
+	<section>
+		<title>Configure database</title>
+		<para> To configure DNet to work with a different database as the one
+			in the demo package, generally speaking, you have to install the
+			database engine on your computer, create the database user and
+			schema, configure the DNet parameters in the properties file to point
+			to the desired database and optionally provide the jdbc connector
+			specific for your database.</para>
+	</section>
+	<section>
+		<title>MySQL 5.x</title>
+		<para> Ensure you have MySQL already installed and started.</para>
+		<para>
+			In a command window (on Windows) navigate to your Mysql installation
+			folder(assume it is MYSQL_HOME_FOLDER): cd MYSQL_HOME_FOLDER/bin Then
+			start the mysql command-line tool: mysql --user=root --password=root
+			Replace with your own password in the line above. Create the database
+			and the user:
+			<programlisting>
+	CREATE DATABASE dnet CHARACTER SET utf8;
+	CREATE USER dnet IDENTIFIED BY 'dnet';
+	GRANT ALL PRIVILEGES ON dnet.* TO 'dnet'@'%' IDENTIFIED BY 'dnet'; 
+			</programlisting>
+			Type
+			<literal>exit;</literal>
+			to return to shell/dos control. Open
+			<literal>net.nan21.dnet.properties</literal>
+			file and comment the existing database configuration and uncomment
+			the MySQL properties under
+			<literal>DATABASE CONFIGURATION</literal>
+			section. You should have the following as a result:
+			<programlisting>
+	jdbc.driverClassName=com.mysql.jdbc.Driver
+	jdbc.url=jdbc:mysql://localhost:3306/dnet
+	jdbc.username=dnet
+	jdbc.password=dnet
+			</programlisting>
+			In case you used some other schema/user replace the values
+			accordingly. Also ensure that the host and port are correct. These
+			are the default values for an installation on your local computer.
+			The jdbc driver for MySQL is provided with DNet.
+		</para>
+	</section>
+	<section>
+		<title>Oracle 9,10,11,XE</title>
+		<para> Ensure you have Oracle already installed and started.</para>
+		<para>
+			Connect to Oracle with SQL*Plus or a similar client and execute:
+			<programlisting>
+	CREATE USER DNET IDENTIFIED BY DNET;
+	GRANT CONNECT, RESOURCE, CREATE TABLE, CREATE VIEW, CREATE SEQUENCE TO DNET;
+			</programlisting>
+			Open
+			<literal>net.nan21.dnet.properties</literal>
+			file and comment the existing database configuration and uncomment
+			the Oracle properties under
+			<literal>DATABASE CONFIGURATION</literal>
+			section. You should have the following as a result:
+			<programlisting>
+	jdbc.driverClassName=oracle.jdbc.OracleDriver
+	jdbc.url=jdbc:oracle:thin:@localhost:1521:XE
+	jdbc.username=DNET
+	jdbc.password=DNET
+			</programlisting>
+			In case you used some other schema/user replace the values
+			accordingly. Also ensure that the host, port and service are correct.
+			These are the default values for the Oracle XE installed on your
+			local computer.
+			In this case also set <literal>sys.disableFetchGroups=true</literal>. 
+		</para>
+		<para>
+			Due to license restrictions, the jdbc driver for Oracle database is
+			NOT shipped with DNet. You must download it separately from Oracle
+			website. Go to
+			<ulink
+				url="http://www.oracle.com/technetwork/indexes/downloads/index.html">http://www.oracle.com/technetwork/indexes/downloads/index.html
+			</ulink>
+			look for `JDBC Drivers` and select the version you want: `Oracle
+			Database 11g Release 2` or `Oracle Database 11g Release 1`. Choose
+			either
+			<literal>ojdbc6.jar</literal>
+			or
+			<literal>ojdbc5.jar</literal>
+			Moreover, Oracle doesn't provide an osgi ready version of their jdbc
+			so you'll have to do this conversion yourself. There are different
+			ways to do this, here is presented one simple approach which works
+			fine:
+			<itemizedlist>
+				<listitem>
+					Go to
+					<ulink url="http://www.aqute.biz/Bnd/Download">http://www.aqute.biz/Bnd/Download</ulink>
+					, download
+					<literal>biz.aQute.bnd.jar</literal>
+					and rename it to something simple for example bnd.jar
+				</listitem>
+				<listitem>
+					Open a command window, navigate to the location where you saved the
+					<literal>ojdbc6.jar</literal>
+					and execute the following:
+					<programlisting>java -jar bnd.jar wrap ojdbc6.jar</programlisting>
+					In case of an error like 'java is not recognized ...' add the
+					location of
+					<literal>$JAVA_HOME/bin</literal>
+					folder to your PATH environment variable. Please check the java
+					documentation. As a result of this step you should get a new file:
+					<literal>ojdbc6.bar</literal>
+				</listitem>
+				<listitem>
+					Copy the new file to
+					<literal>VIRGO_HOME/repository/usr</literal>
+					and replace the
+					<literal>.bar</literal>
+					extension with
+					<literal>.jar</literal>
+				</listitem>
+			</itemizedlist>
+		</para>
+	</section>
+	<section>
+		<title>Other database</title>
+		<para> Ensure you have the database engine installed and started.
+		</para>
+		<para>
+			Create the database user and schema. Open
+			<literal>net.nan21.dnet.properties</literal>
+			file and comment the existing database configuration and add the
+			properties for the new database under
+			<literal>DATABASE CONFIGURATION</literal>
+			section setting the values accordingly:
+			<programlisting>
+	jdbc.driverClassName=...
+	jdbc.url=...
+	jdbc.username=...
+	jdbc.password=...
+			</programlisting>
+		</para>
+		<para>
+			Download the jdbc driver for your database (ensure it is the osgi
+			enabled version) and copy it under
+			<literal>VIRGO_HOME/repository/usr</literal>
+		</para>
+	</section>
+	<section>
+		<title>Static content provider</title>
+		<para> The Extjs based user interfaces are static resources, plain
+			javascript files, images, css files, etc. These may be deployed under
+			a different web-server which provides only static content.</para>
+		<para>
+			There are three main parts which may be configured to be served by
+			such a static content provider:
+			<itemizedlist>
+				<listitem>
+					The Extjs library itself
+				</listitem>
+				<listitem>
+					DNet-Core extjs user interface elements
+				</listitem>
+				<listitem>
+					DNet-Modules extjs user interface elements
+				</listitem>
+			</itemizedlist>
+		</para>
+		<para >
+			
+			Open
+			<literal>net.nan21.dnet.properties</literal>
+			file and under
+			<literal>WEB-UI CONFIGURATION</literal>
+			section configure the parameters to point to the desired locations.
+			Ensure that the desired content is published by that web server. Below
+			are some examples on how to do this with Apache Http server.
+		</para>
+		<example wordsize="-1">
+			<title>DNet-Core extjs user interface elements </title>
+			Extract the content of
+			<literal>nan21.dnet.core.ui.extjs.jar</literal>
+			( You may use 7zip for this ) in a location let's say
+			<literal>C:/dnet/static_content/nan21.dnet.core.ui.extjs</literal>
+			Open
+			<literal>httpd.conf</literal>
+			and create an alias after the
+			<literal>DocumentRoot</literal>
+			parameter
+			<programlisting>Alias /nan21.dnet.core.ui.extjs "C:\dnet\static_content\nan21.dnet.core.ui.extjs\src\main\webapp"</programlisting>
+			In
+			<literal>net.nan21.dnet.properties</literal>
+			set the following:
+			<programlisting>url.ui.extjs.core=http://localhost/nan21.dnet.core.ui.extjs</programlisting>
+		</example>
+		<example>
+			<title>DNet-Modules extjs user interface elements</title>
+			For the modules extjs user interface is all or nothing, all of the
+			modules static content is retrieved from the same url. Extract the
+			content of ALL of the
+			<literal>nan21.dnet.module.XX.ui.extjs.jar</literal>
+			bundles ( You may use 7zip for this ) in a location let's say
+			<literal>C:/dnet/static_content/nan21.dnet.module.XX.ui.extjs
+			</literal>
+			Open
+			<literal>httpd.conf</literal>
+			and create an alias after the
+			<literal>DocumentRoot</literal>
+			parameter for each of the modules as the following:
+			<programlisting>Alias /nan21.dnet.module.XX.ui.extjs "C:\dnet\static_content\nan21.dnet.module.XX.ui.extjs\src\main\webapp"</programlisting>
+			In
+			<literal>net.nan21.dnet.properties</literal>
+			set the following:
+			<programlisting>url.ui.extjs=http://localhost</programlisting>
+			Thus the url for the module's extjs scripts will be
+			<literal>http://localhost/nan21.dnet.module.XX.ui.extjs</literal>
+		</example>
+	</section>
 </chapter>

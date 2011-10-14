@@ -24,7 +24,7 @@
 			</listitem>
 		</itemizedlist>
 		Each view extends an abstract view which further extends the proper
-		extjs component. Lets have a look at each of them see how they are
+		Extjs component. Lets have a look at each of them see how they are
 		built and how can be extended.
 	</para>
 	<section id="filter">
@@ -32,31 +32,32 @@
 		<para>The filter forms are used to enter filter criteria for queries.
 			Below is an example of a filter form definition for countries.</para>
 		<programlisting>
-	Ext.ns('net.nan21.dnet.module.bd.geo.dc'); 
-	net.nan21.dnet.module.bd.geo.dc.Country$Filter = Ext.extend(dnet.base.AbstractDcvFilterForm, { 
+	Ext.define("net.nan21.dnet.module.bd.geo.dc.Country$Filter", {
+		extend: "dnet.base.AbstractDcvFilterForm",
+	 	alias: "widget.net.nan21.dnet.module.bd.geo.dc.Country$Filter",
+		
 		_defineElements_: function () {	
 			//controls	
 			this._getBuilder_()	
-			.addTextField({ name:"name", dataIndex:"name",anchor:"-20"   })
-			.addTextField({ name:"code", dataIndex:"code",anchor:"-20"   })
-			.addTextField({ name:"iso2", dataIndex:"iso2",anchor:"-20",maxLength:2,caseRestriction:"uppercase"  })
-			.addTextField({ name:"iso3", dataIndex:"iso3",anchor:"-20",maxLength:3,caseRestriction:"uppercase"  })
-			.addBooleanField({ name:"active", dataIndex:"active"  })
+			.addTextField({ name:"name",_sharedLabel_:true, dataIndex:"name",anchor:"-20",maxLength:255  })
+			.addTextField({ name:"code",_sharedLabel_:true, dataIndex:"code",anchor:"-20",maxLength:32  })
+			.addTextField({ name:"iso2", dataIndex:"iso2",anchor:"-20",maxLength:2   })
+			.addTextField({ name:"iso3", dataIndex:"iso3",anchor:"-20",maxLength:3  })
+			.addBooleanField({ name:"active",_sharedLabel_:true, dataIndex:"active",anchor:"-20"  })
 			//containers
-			.addPanel({ name:"col1", layout:"form",width:210  })
-			.addPanel({ name:"col2", layout:"form",width:210  })
-			.addPanel({ name:"col4", layout:"form",width:210  })
-			.addPanel({ name:"main", layout:"hbox", layoutConfig: { align:'top' , pack:'start'} , autoScroll:true }); 
+			.addPanel({ name:"col1", layout:"anchor",width:210,labelWidth:0 })
+			.addPanel({ name:"col2", layout:"anchor",width:210,labelWidth:0 })
+			.addPanel({ name:"col4", layout:"anchor",width:210,labelWidth:0 })
+			.addPanel({ name:"main", layout:"hbox", layoutConfig: { align:'top' , pack:'start'} , autoScroll:true })     
 		}
 		,_linkElements_: function () {
 			this._getBuilder_()
 			.addChildrenTo("main",["col1","col2","col4"])
 			.addChildrenTo("col1",["name","code"])
 			.addChildrenTo("col2",["iso2","iso3"])
-			.addChildrenTo("col4",["active"]);
+			.addChildrenTo("col4",["active"])
 		}
 	}); 
-	Ext.reg("net.nan21.dnet.module.bd.geo.dc.Country$Filter", net.nan21.dnet.module.bd.geo.dc.Country$Filter ); 
 </programlisting>
 		<para>
 			Defining a filter form is exactly the same as defining an edit form.
@@ -78,10 +79,12 @@
 		<title>Read-only lists</title>
 		<para>Below is an example of grid definition for countries.</para>
 		<programlisting>
-	Ext.ns('net.nan21.dnet.module.bd.geo.dc');	 	 
-	net.nan21.dnet.module.bd.geo.dc.Country$List = Ext.extend(dnet.base.AbstractDcvGrid, {
-	
-		 _defineColumns_: function () {	
+	Ext.define("net.nan21.dnet.module.bd.geo.dc.Country$List", {
+		extend: "dnet.base.AbstractDcvGrid",
+		alias:"widget.net.nan21.dnet.module.bd.geo.dc.Country$List",
+		
+		 
+		_defineColumns_: function () {	
 			this._getBuilder_()	
 			.addTextColumn({ name:"name", dataIndex:"name",width:200 })   	
 			.addTextColumn({ name:"code", dataIndex:"code",width:100 })   	
@@ -91,14 +94,13 @@
 			.addTextColumn({ name:"notes", dataIndex:"notes", hidden:true,width:200 })   	
 			.addBooleanColumn({ name:"hasRegions", dataIndex:"hasRegions"})   	     
 			.addNumberColumn({ name:"id", dataIndex:"id", hidden:true,format:"0",width:70 })  
-			.addDateColumn({ name:"createdAt", dataIndex:"createdAt", hidden:true })   	      	     
-			.addDateColumn({ name:"modifiedAt", dataIndex:"modifiedAt" })   	      	     
+			.addDateColumn({ name:"createdAt", dataIndex:"createdAt", hidden:true,format:Ext.DATETIME_FORMAT})   	      	     
+			.addDateColumn({ name:"modifiedAt", dataIndex:"modifiedAt",format:Ext.DATETIME_FORMAT})   	      	     
 			.addTextColumn({ name:"createdBy", dataIndex:"createdBy", hidden:true,width:100 })   	
 			.addTextColumn({ name:"modifiedBy", dataIndex:"modifiedBy",width:100 })   	
 		  ;		   
 		}
-	}); 
-	Ext.reg("net.nan21.dnet.module.bd.geo.dc.Country$List", net.nan21.dnet.module.bd.geo.dc.Country$List ); 		</programlisting>
+	}); 		</programlisting>
 		<para>This definition creates the following view:</para>
 		<mediaobject>
 			<imageobject>
@@ -164,14 +166,15 @@
 			column definitions from the data-source fields: Using this method
 			your grid definition would look like:</para>
 		<programlisting>
-Ext.ns('net.nan21.dnet.module.bd.geo.dc');	 	 
-net.nan21.dnet.module.bd.geo.dc.Country$List = Ext.extend(dnet.base.AbstractDcvGrid, {
-	_defineColumns_: function () {	
-	    this._getBuilder_()
-		.addAllFromDataSource();		   
-	}
-}); 
-Ext.reg("net.nan21.dnet.module.bd.geo.dc.Country$List", net.nan21.dnet.module.bd.geo.dc.Country$List );
+	Ext.define("net.nan21.dnet.module.bd.geo.dc.Country$List", {
+		extend: "dnet.base.AbstractDcvGrid",
+		alias:"widget.net.nan21.dnet.module.bd.geo.dc.Country$List",
+		
+		_defineColumns_: function () {	
+		    this._getBuilder_()
+			.addAllFromDataSource();		   
+		}
+	}); 
 </programlisting>
 		<para>Although the builder tries to do some guessing which you can
 			override with your own rules a fine tuning of the result might be
@@ -211,32 +214,41 @@ Ext.reg("net.nan21.dnet.module.bd.geo.dc.Country$List", net.nan21.dnet.module.bd
 		<title>Edit forms</title>
 		<para>The edit forms are used to edit one record at a time. Below is
 			an example of an edit form definition for countries.</para>
-		<programlisting>Ext.ns('net.nan21.dnet.module.bd.geo.dc');	 
-net.nan21.dnet.module.bd.geo.dc.Country$Edit = Ext.extend(dnet.base.AbstractDcvForm, {
-	_defineElements_: function () {	
-		//controls	
-		this._getBuilder_()	
-		.addTextField({ name:"code", dataIndex:"code", width:200 ,allowBlank:false,maxLength:32,vtype:"alphanum"  })
-		.addTextField({ name:"name", dataIndex:"name", width:200 ,allowBlank:false,maxLength:255  })
-		.addTextArea({ name:"notes", dataIndex:"notes",height:40, width:200   })
-		.addCheckbox({ name:"active", dataIndex:"active"  })
-		.addCheckbox({ name:"hasRegions", dataIndex:"hasRegions"  })
-		.addTextField({ name:"iso2", dataIndex:"iso2",anchor:"-20" ,maxLength:2,caseRestriction:"uppercase",vtype:"alphanum"  })
-		.addTextField({ name:"iso3", dataIndex:"iso3",anchor:"-20" ,maxLength:3,caseRestriction:"uppercase",vtype:"alphanum"  })
-		//containers
-		.addPanel({ name:"col1", layout:"form" , width:350  })     
-		.addPanel({ name:"col2", layout:"form" , width:220  })     
-		.addPanel({ name:"main", layout:"hbox", layoutConfig: { align:'top' , pack:'start'}, autoScroll:true }) 
-		;     
-	}
-	,_linkElements_: function () {
-		this._getBuilder_()
-		.addChildrenTo("main",["col1" ,"col2" ])
-		.addChildrenTo("col1",["name","code","notes"])
-		.addChildrenTo("col2",["iso2","iso3","active", "hasRegions"]);
-	}	
-});
-Ext.reg("net.nan21.dnet.module.bd.geo.dc.Country$Edit", net.nan21.dnet.module.bd.geo.dc.Country$Edit ); </programlisting>
+		<programlisting>
+		
+	Ext.define("net.nan21.dnet.module.bd.geo.dc.Country$Edit", {
+		extend: "dnet.base.AbstractDcvForm",
+		alias: "widget.net.nan21.dnet.module.bd.geo.dc.Country$Edit",
+		
+		_defineElements_: function () {	
+			//controls	
+			this._getBuilder_()	
+			.addTextField({ name:"code", dataIndex:"code",anchor:"-20" ,allowBlank:false,maxLength:32   })
+			.addTextField({ name:"name", dataIndex:"name",anchor:"-20" ,allowBlank:false,maxLength:255  })
+			.addTextArea({ name:"notes", dataIndex:"notes",height:40,anchor:"-20"   })
+			.addCheckbox({ name:"active", dataIndex:"active"  })
+			.addCheckbox({ name:"hasRegions", dataIndex:"hasRegions"  })
+			.addTextField({ name:"iso2", dataIndex:"iso2",anchor:"-20" ,maxLength:2   })
+			.addTextField({ name:"iso3", dataIndex:"iso3",anchor:"-20" ,maxLength:3   })
+			.addDateField({ name:"createdAt", dataIndex:"createdAt",anchor:"-20",noEdit:true, hideTrigger:true ,allowBlank:false})
+			.addDateField({ name:"modifiedAt", dataIndex:"modifiedAt",anchor:"-20",noEdit:true, hideTrigger:true ,allowBlank:false})
+			.addTextField({ name:"createdBy", dataIndex:"createdBy",anchor:"-20",noEdit:true  ,allowBlank:false,maxLength:32  })
+			.addTextField({ name:"modifiedBy", dataIndex:"modifiedBy",anchor:"-20",noEdit:true  ,allowBlank:false,maxLength:32  })
+			//containers
+			.addPanel({ name:"col1", layout:"anchor" , width:350,labelWidth:0 })     
+			.addPanel({ name:"col2", layout:"anchor" , width:220,labelWidth:0 })     
+			.addPanel({ name:"main", layout:"hbox", layoutConfig: { align:'top' , pack:'start'}, autoScroll:true }) 
+			;     
+		},
+		
+		_linkElements_: function () {
+			this._getBuilder_()
+			.addChildrenTo("main",["col1" ,"col2" ])
+			.addChildrenTo("col1",["name","code","notes"])
+			.addChildrenTo("col2",["iso2","iso3","active","hasRegions"]);
+		}	
+	});
+ </programlisting>
 		<para>This definition creates the following view:</para>
 		<mediaobject>
 			<imageobject>
@@ -281,18 +293,20 @@ Ext.reg("net.nan21.dnet.module.bd.geo.dc.Country$Edit", net.nan21.dnet.module.bd
 			<listitem>
 				All classes which extend Extjs components are marked with
 				underscores to prevent possible conflicts with future changes in the
-				extended component. AbstractDcvForm extends the Ext.form.FormPanel
+				extended component. AbstractDcvForm extends the Ext.form.Panel
 				thus all its own methods are delimited with underscores:
 				_defineElements_, _linkElements_, etc . The only exception in this
 				case is the situation where it has to implement certain methods
-				expected by external functions. For example the binding manager
-				needs all the managed views to implement a certain interface:
+				expected by external functions. For example in the Extjs 3 based application, the binding manager
+				required all the managed views to implement a certain interface:
 				<programlisting> 
-	,onBind:function(record) ;
-	,onUnbind:function(record);
-	,afterEdit:function(record);
-	,afterReject:function(record);
-	,updateBound:function(record);</programlisting>
+				,onBind:function(record) ;
+				,onUnbind:function(record);
+				,afterEdit:function(record);
+				,afterReject:function(record);
+				,updateBound:function(record);
+				</programlisting>
+				Altough it is not used any more as it was replaced with the Extjs built-in mchanism, the concept remains. 
 			</listitem>
 		</itemizedlist>
 	</section>

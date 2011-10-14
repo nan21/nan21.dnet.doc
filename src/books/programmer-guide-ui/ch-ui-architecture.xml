@@ -2,5 +2,29 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 		"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter id="ui-architecture">
-	<title>Architecture</title>	
+	<title>Architecture</title>
+	<para> DNet Extjs based user interface is structured on three main
+		levels from bottom to top they are: data-controls, frames and
+		application.</para>
+	<para> The data-control is a generic reusable component, the basic
+		building block of the application. It is an MVC group which defines
+		the three types of elements for a business object: the model,
+		predefined views and a controller. Aside from the basic functions like
+		actions(CRUD operations control, action state management, record
+		navigation, etc), the controller implements various logic which is
+		data-control specific and should be available regardless of where and
+		how this data-control is used.</para>
+	<para> Frames are `mini-applications` built up from data-controls
+		linked together by relations. A frame's view is a composite view which
+		usually is created combining together the predefined views of the
+		included data-controls arranged in frame specific layouts. It also
+		implements specific functional logic. Aside of the data-controls it
+		can include other base components like assignment windows or whatever
+		free-hand construct is required.</para>
+	<para> The application level is the top level layer, it is responsible
+		to create the main viewport where the user-interface is rendered,
+		provides session and menu management, frame navigation and routed
+		frame communication, etc. It is provided mainly by DNet-Core,
+		however, any bundle can provide contributions to override and
+		customize its look and behavior.</para>
 </chapter>

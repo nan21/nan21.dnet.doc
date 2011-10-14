@@ -14,36 +14,75 @@
 		<para>The following code is an example of such a component definition,
 			the one which is used in the user definition frame to assign roles to
 			the user being edited:</para>
-		<programlisting>Ext.ns("net.nan21.dnet.module.ad.usr.asgn");
-net.nan21.dnet.module.ad.usr.asgn.UserRoles = Ext.extend(dnet.base.AbstractAsgn, {
-	dsName: "UserRoles", 
-	recordFields : [{name:"id",type:"int"},{name:"name",type:"string"},{name:"description",type:"string"}]
-});	 
+		<programlisting>
 
-net.nan21.dnet.module.ad.usr.asgn.UserRoles$List = Ext.extend( dnet.base.AbstractAsgnGrid, {
-	_defineColumns_: function () {
-		this._getBuilder_()		
-		.addTextColumn( {name:"id", header:"id", dataIndex:"id", hidden:true, width:100})
-		.addTextColumn( {name:"name", header:"name", dataIndex:"name", width:150 })
-		.addTextColumn( {name:"description", header:"description", dataIndex:"description", width:150 })
-	} 
-});
-Ext.reg("net.nan21.dnet.module.ad.usr.asgn.UserRoles$Left", net.nan21.dnet.module.ad.usr.asgn.UserRoles$List);
-Ext.reg("net.nan21.dnet.module.ad.usr.asgn.UserRoles$Right", net.nan21.dnet.module.ad.usr.asgn.UserRoles$List); 
+	Ext.define("net.nan21.dnet.module.ad.usr.asgn.UserRoles$Model", {
+		extend : 'Ext.data.Model',
+		fields : [ {
+			name : "id",
+			type : "string"
+		}, {
+			name : "name",
+			type : "string"
+		}, {
+			name : "description",
+			type : "string"
+		} ]
+	});
+	
+	
+	Ext.define("net.nan21.dnet.module.ad.usr.asgn.UserRoles", {
+		extend : "dnet.base.AbstractAsgn",
+		dsName : "UserRoles",
+		recordModel : "net.nan21.dnet.module.ad.usr.asgn.UserRoles$Model"
+	});
 
-net.nan21.dnet.module.ad.usr.asgn.UserRoles$Ui = Ext.extend(dnet.base.AbstractAsgnUi, {
- 	 width:700
-	,height:400 
-	,title:"Assign roles to user"
-	,_controller_:net.nan21.dnet.module.ad.usr.asgn.UserRoles
 
-	,_defineElements_: function () {
-		this._getBuilder_()
-			.addLeftGrid({ xtype:"net.nan21.dnet.module.ad.usr.asgn.UserRoles$Left"})
-			.addRightGrid({ xtype:"net.nan21.dnet.module.ad.usr.asgn.UserRoles$Right"})
-	}
-});	 
-Ext.reg("net.nan21.dnet.module.ad.usr.asgn.UserRoles$Ui", net.nan21.dnet.module.ad.usr.asgn.UserRoles$Ui);</programlisting>
+	Ext.define("net.nan21.dnet.module.ad.usr.asgn.UserRoles$List", {
+		extend : "dnet.base.AbstractAsgnGrid",
+		alias : [ "widget.net.nan21.dnet.module.ad.usr.asgn.UserRoles$Left",
+				"widget.net.nan21.dnet.module.ad.usr.asgn.UserRoles$Right" ],
+		_defineColumns_ : function() {
+			this._getBuilder_().addTextColumn( {
+				name : "id",
+				header : "Id",
+				dataIndex : "id",
+				hidden : true,
+				width : 100
+			}).addTextColumn( {
+				name : "name",
+				header : "Name",
+				dataIndex : "name",
+				width : 150
+			}).addTextColumn( {
+				name : "description",
+				header : "Description",
+				dataIndex : "description",
+				width : 150
+			})
+		}
+	}); 
+		
+	Ext.define("net.nan21.dnet.module.ad.usr.asgn.UserRoles$Ui", {
+		extend : "dnet.base.AbstractAsgnUi",
+		alias : "widget.net.nan21.dnet.module.ad.usr.asgn.UserRoles$Ui",
+		
+		width : 700,
+		height : 400,
+		title : "Assign roles to user",
+		
+		_controller_ : net.nan21.dnet.module.ad.usr.asgn.UserRoles,
+		_filterFields_ : [ [ "id", "Id" ], [ "name", "Name" ] ],
+		_defaultFilterField_ : "name",
+	
+		_defineElements_ : function() {
+			this._getBuilder_()
+				.addLeftGrid( { xtype : "net.nan21.dnet.module.ad.usr.asgn.UserRoles$Left" })
+				.addRightGrid( { xtype : "net.nan21.dnet.module.ad.usr.asgn.UserRoles$Right" })
+		}
+	});
+
+</programlisting>
 		<para>
 			First we declare the main view-controller with the model definition.
 			As usual it extends an abstract base class

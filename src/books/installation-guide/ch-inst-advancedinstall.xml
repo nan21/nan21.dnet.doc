@@ -5,12 +5,33 @@
 	<title>Advanced installation concepts</title>
 	<section>
 		<title>Configure database</title>
-		<para> To configure DNet to work with a different database as the one
-			in the demo package, generally speaking, you have to install the
-			database engine on your computer, create the database user and
-			schema, configure the DNet parameters in the properties file to point
-			to the desired database and optionally provide the jdbc connector
-			specific for your database.</para>
+		<para>
+			To configure DNet to work with a different database as the one in the
+			demo package, generally speaking, you have to:
+			<itemizedlist>
+				<listitem>
+					Install the database engine on your computer
+				</listitem>
+				<listitem>
+					Create the database user and schema
+				</listitem>
+				<listitem>
+					Configure the DNet parameters in the properties file to point to
+					the desired database
+				</listitem>
+				<listitem>
+					Provide the jdbc connector specific for your database (if it is not
+					already shipped with DNet)
+				</listitem>
+				<listitem>
+					Go through the setup process once again for the new database,
+					either calling the http://your-host:port/nan21.dnet.core.setup link from your
+					browser, or configure eclipselink parameters in the properties file to generate the schema
+					definition to file instead of database and execute it yourself
+					manually.
+				</listitem>
+			</itemizedlist>
+		</para>
 	</section>
 	<section>
 		<title>MySQL 5.x</title>
@@ -70,8 +91,9 @@
 			In case you used some other schema/user replace the values
 			accordingly. Also ensure that the host, port and service are correct.
 			These are the default values for the Oracle XE installed on your
-			local computer.
-			In this case also set <literal>sys.disableFetchGroups=true</literal>. 
+			local computer. In this case also set
+			<literal>sys.disableFetchGroups=true</literal>
+			.
 		</para>
 		<para>
 			Due to license restrictions, the jdbc driver for Oracle database is
@@ -165,18 +187,17 @@
 				</listitem>
 			</itemizedlist>
 		</para>
-		<para >
-			
+		<para>
 			Open
 			<literal>net.nan21.dnet.properties</literal>
 			file and under
 			<literal>WEB-UI CONFIGURATION</literal>
 			section configure the parameters to point to the desired locations.
-			Ensure that the desired content is published by that web server. Below
-			are some examples on how to do this with Apache Http server.
+			Ensure that the desired content is published by that web server.
+			Below are some examples on how to do this with Apache Http server.
 		</para>
 		<example wordsize="-1">
-			<title>DNet-Core extjs user interface elements </title>
+			<title>DNet-Core extjs user interface elements</title>
 			Extract the content of
 			<literal>nan21.dnet.core.ui.extjs.jar</literal>
 			( You may use 7zip for this ) in a location let's say

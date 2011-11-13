@@ -22,8 +22,10 @@
 			extension=".html" 
 			basedir="${src}" 
 			destdir="${out}">
-				<include name="books/**/ch*.xml" />		
+				<include name="books/**/*.xml" />		
 				<param name="html.stylesheet" expression="../style.css" />
+				<param name="product.version" expression="5454" />
+			
 		</xslt>
 	</target>
 					

@@ -2,8 +2,9 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <book>
 	<bookinfo>
-		<title>Programmer guide - server side</title>
-		<productname>DNet eBusiness Suite</productname>		 
+		<title>Programmer guide - server side  | DNet eBusiness Suite</title>
+		<productname>DNet eBusiness Suite</productname>	
+		<releaseinfo>Version: 1.0.0.M4</releaseinfo> 	 
 		<authorgroup>
 			<author>
 				<firstname>Attila</firstname>

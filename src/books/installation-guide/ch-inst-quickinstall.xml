@@ -10,6 +10,13 @@
 			available from
 			<link linkend="http://www.java.com">http://www.java.com</link>
 		</para>
+		<para>
+			Depending on your environment setup, you may need to configure the
+			amount of memory allocated by the operating system to the JVM (Java
+			Virtual Machine). Please see
+			<link linkend="out-of-memory">Prevent or fix Out of Memory Errors</link>
+			section below.
+		</para>
 	</section>
 	<section>
 		<title>Installing from the zip download</title>
@@ -20,7 +27,8 @@
 			Inside you should find a
 			<literal>virgo-tomcat-server-xxx</literal>
 			folder which contains a Virgo web-server already configured to run
-			DNet; xxx stands for the server version, at the time of writing this document is 3.0.1-RELEASE. So go to
+			DNet; xxx stands for the server version, at the time of writing this
+			document is 3.0.1-RELEASE. So go to
 			<literal>virgo-tomcat-server-xxx/bin</literal>
 			folder and double-click the
 			<literal>startup.bat</literal>
@@ -33,15 +41,40 @@
 			<link linkend="http://localhost:8081/nan21.dnet.core.welcome">http://localhost:8081/nan21.dnet.core.welcome
 			</link>
 		</para>
-		
-		<para>Click the logo which redirects you to the application setup section. Sign-in with user 'admin' and password 'admin'.</para>
-		
+		<para>Click the logo which redirects you to the application setup
+			section. Sign-in with user 'admin' and password 'admin'.</para>
 		<para>Follow on-screen instructions.</para>
-		
 		<note>
-		The default configuration uses H2 database and creates its files in $USER_HOME/dnet_ebs/$current_version directory.
-		 where $USER_HOME is your user home on you computer and $current_version is the DNet version which is installed.
+			The default configuration uses H2 database and creates its files in
+			$USER_HOME/dnet_ebs/dnet_db_h2 directory, where $USER_HOME is your
+			user home on you computer.
 		</note>
-		
+	</section>
+	<section id="out-of-memory">
+		<title>Prevent or fix Out of Memory Errors</title>
+		<para>Java applications run in a "container" called "Java virtual
+			machine" (JVM) not directly within an operating system. Whenever such
+			a JVM process is started by the operating system, it is allocated a
+			certain amount of memory so that the JVM can use it to run its
+			applications. By default, this amount is rather small, usually 64Mb
+			regardless of how much memory is available on your machine. Larger
+			Java applications need more memory to run properly and when the JVM
+			cannot allocate more it crashes with "Out of Memory Error". To
+			prevent or fix such problems, the amount of memory allocated to JVM
+			needs to be increased.</para>
+		<para> By default the demo application in the distribution package
+			starts Virgo web-server with the proper values to run DNet, however you may
+			change these in case you need.</para>
+		<para>
+			On Windows open
+			<literal>virgo-tomcat-server-xxx/bin/setenv.bat</literal>
+			, on Linux open
+			<literal>virgo-tomcat-server-xxx/bin/setenv.sh</literal>
+			and change the
+			<literal>JAVA_OPTS</literal>
+			values provided according to your needs.
+		</para>
+		<para>Please check the Java documentation for more details on JVM
+			startup configuration options.</para>
 	</section>
 </chapter>

@@ -217,16 +217,10 @@
 	</section>
 	<section>
 		<title>Presenter bundle</title>
-		<para> Depending on the type of the user interface, this layer may or may
-			not be present. For the Extjs based UI (and very likely
-			for any other RIA) it is present, for plain jsp based web pages it is
-			not. In the later case the functionality described here is
-			implemented in the web controllers as in the standard spring MVC
-			flow.</para>
 		<para>A presenter bundle is responsible to define view-model objects
 			and implement the necessary functions to work with them. Basically it
 			is an adaptor between the domain model and the user-interface;
-			defines the model required by the UI, provides the convertors to/from
+			defines the model required by the UI, provides the converters to/from
 			domain-entity/view-model, services to control the flow in this layer
 			and delegates for presenter logic. These view-models in DNet are of
 			two types:</para>

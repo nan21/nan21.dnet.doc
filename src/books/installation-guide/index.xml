@@ -2,14 +2,15 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <book>
 	<bookinfo>
-		<title>Installation guide</title>
-		<productname>DNet eBusiness Suite</productname>		 
-		<authorgroup>
+		<title>Installation guide | DNet eBusiness Suite</title>		
+		<productname>DNet eBusiness Suite</productname>	
+		<releaseinfo >Version: 1.0.0.M4</releaseinfo>		 
+		<authorgroup >
 			<author>
 				<firstname>Attila</firstname>
-				<surname>Mathe</surname>				
+				<surname>Mathe</surname>								
 			</author>
-		</authorgroup>	
+		</authorgroup>		  
 		<legalnotice>
 			<para>
 				Copyright &copy; 2010, 2011 Nan21 Electronics SRL

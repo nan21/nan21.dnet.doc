@@ -446,8 +446,16 @@ body { background-image: url('</xsl:text>
       </xsl:call-template>
       <xsl:call-template name="user.head.content">
         <xsl:with-param name="node" select="$doc"/>
-      </xsl:call-template>
-    </head>
+      </xsl:call-template><script type="text/javascript"> 
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-20674817-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })(); 
+</script></head>
     <body>
       <xsl:call-template name="body.attributes"/>
       <xsl:call-template name="user.header.content">

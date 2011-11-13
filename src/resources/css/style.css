@@ -9,7 +9,8 @@ body {
 h1.title {
   margin-top: 2.0em;
   margin-bottom: 1.0em;
-  font-size:2.4em;
+  font-size:2.2em;
+  line-height:135%;
   color: #000000;
   font-family: Georgia, Times New Roman, Trebuchet MS;
 }
@@ -115,4 +116,14 @@ pre.prettyprint { padding: 2px; border: 1px solid #888; }
   .tag { color: #006; font-weight: bold; }
   .atn { color: #404; }
   .atv { color: #060; }
+}
+.author {
+	color: black;
+}
+.releaseinfo {
+	font-size: 1.5em;
+}
+
+.toc a {
+  font-size:1.2em;
 }

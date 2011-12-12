@@ -182,10 +182,10 @@
 	initialArtifacts=repository:plan/org.eclipse.virgo.kernel.userregion.springdm, repository:plan/org.eclipse.virgo.web.tomcat
 	</programlisting>
 			and add to the first position a reference to
-			<literal>repository:bundle/javax.persistence</literal>
+			<literal>repository:bundle/javax.persistence</literal> and at the end of the line add <literal>repository:plan/org.eclipse.virgo.snaps</literal>
 			so that you'll have:
 			<programlisting>
-	initialArtifacts=repository:bundle/javax.persistence, repository:plan/org.eclipse.virgo.kernel.userregion.springdm, repository:plan/org.eclipse.virgo.web.tomcat
+	initialArtifacts=repository:bundle/javax.persistence, repository:plan/org.eclipse.virgo.kernel.userregion.springdm, repository:plan/org.eclipse.virgo.web.tomcat, repository:plan/org.eclipse.virgo.snaps
 	</programlisting>
 		</para>
 		<para>

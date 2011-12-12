@@ -233,9 +233,32 @@
 				assignment models used by assignment windows
 			</listitem>
 		</itemizedlist>
-		<para>In the following the data-sources(ds) are used as reference to
+		<para>In the following, the data-sources(ds) are used as reference to
 			describe the concepts, however everything is very similar for the
 			assignment components also.</para>
+		<para>In a nutshell, the overall concept to use view-models is to
+			define a view-model as a POJO class and decorate it with some
+			annotations to provide the necessary information to the framework to
+			be able to work with it. In case of more complex or non-standard behavior
+			custom implementation should be provided for the particular feature
+			and declare the custom class in the service spring-bean definiton as
+			presented below.</para>
+		<para>
+			The view-model class is a plain java object annotated with
+			<literal>@Ds</literal>
+			which stands for data-source and provides several attributes to help
+			define the behavior. Mainly, specify the root entity it operates on
+			and provide default filter and sort information. Also an
+			<literal>@DsQueryHints</literal>
+			annotation is available to provide a list of
+			<literal>@javax.persistence.QueryHint</literal>
+			definitions which are used by the query builder when creating the
+			JPQL query. The fields are annotated with
+			<literal>@DsField</literal>
+			which provide field mapping information, i.e. view-model field mapped
+			to an entity reference path. Please check the Java API reference for
+			more details on these annotations.
+		</para>
 		<para>
 			The central piece is a ds-service described by the
 			<literal>net.nan21.dnet.core.api.service.IDsService</literal>
@@ -252,8 +275,8 @@
 				proper transactional service-method in the business layer.
 			</listitem>
 			<listitem>
-				"rpc" methods: these are various services defined as wrappers to
-				delegates and implement
+				"rpc" methods: these are various functions declared as calls to
+				presenter delegates and implement
 				"do-whatever-you-want-with-this-view-model-object" either in a
 				presenter delegate (non-transactional) or delegating the
 				transactional operations to a proper service-method in the
@@ -265,7 +288,7 @@
 			functionality for a presenter service is implemented in an abstract
 			base class
 			<literal>AbstractDsService</literal>
-			providing hooks to customize the execution in the sub-classes as
+			providing hooks to customize the execution flow in the sub-classes as
 			necessary. As most of the time the generic default implementation
 			does the job, usually the default
 			<literal>BaseDsService</literal>
@@ -366,9 +389,35 @@
 		public void modelToEntity(M m, E e) throws Exception;
 		public void entityToModel(E e, M m) throws Exception;
 				]]></programlisting>
-				To de done: default generic converter to work based on the data-source field mapping annotations.   
 			</listitem>
 		</itemizedlist>
+		<para>
+			The converter class is responsible to provide view-model-to-entity
+			and entity-to-view-model conversions. The base converter class
+			implements the conversion functionality using the mapping information
+			provided by the data-source field annotion
+			<literal>@DsField(path="...")</literal>
+			The
+			<literal>entityToModel</literal>
+			conversion is taken care of entirely, for the
+			<literal>modelToEntity</literal>
+			only the attributes are populated in the base class. The default base
+			converter is used automatically if an excplicit converter is not
+			provided in the service declaration bean. It works for the following
+			cases:
+			<itemizedlist>
+				<listitem>
+					Read-only view-model: for example read-only lists, LoV's (lists of
+					values).
+				</listitem>
+				<listitem>
+					Simple editable models which have as source an entity with no
+					reference fields.
+				</listitem>
+			</itemizedlist>
+			For the rest of the cases you'll need to provide a custom converter
+			class where the model-to-entity references are resolved.
+		</para>
 	</section>
 	<section>
 		<title>Extjs user interface bundle</title>

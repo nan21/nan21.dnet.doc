@@ -79,4 +79,10 @@
 			<literal>nan21.dnet.core.setup</literal> is responsible to provide the setup mechanism based on the  <literal>ISetupParticipant</literal> implementations published by the bundles wich require setup tasks to be peformed before usage.			 
 		</para>		 
 	</section>	
+	<section>
+		<title>core.www</title>
+		<para>
+			<literal>nan21.dnet.core.www</literal> is main bundle for the public portal. It is similar in functionality to the <literal>core.web</literal> bundle.			 
+		</para>		 
+	</section>	
 </chapter>	
